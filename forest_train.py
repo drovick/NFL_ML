@@ -1,12 +1,3 @@
-# Uploaded Data to Github Repository
-# Accessing Google Drive data via Colab is a pain
-!git clone https://github.com/drovick/NFL_ML
-!ls
-
-# Move into folder, now we can work
-%cd NFL_ML
-!ls
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np

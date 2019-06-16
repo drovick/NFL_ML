@@ -120,7 +120,9 @@ def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_
               for maxfeat in max_featuress:
                 for maxleaf_nodes in max_leaf_nodess:
                   for minimp_dec in min_impurity_decreases:
-                      
+
+                    print('entering multitree_fit_errors')
+
                     importances,error = multitree_fit_errors(mod,train_in,train_out,test_in,test_out,input_cols,output_cols_,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)         
 
                     importances_list.append(importances)
@@ -176,10 +178,10 @@ def compare_errors(e_list):
 
 from sklearn.ensemble import RandomForestRegressor
 
-i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[80],max_depths=[50],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[50],max_leaf_nodess=[None],min_impurity_decreases=[0,0.005,0.01])
+i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[20],max_depths=[50],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[50],max_leaf_nodess=[None],min_impurity_decreases=[0,0.005,0.01])
 
 
-i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[80],max_depths=[50,100],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[100],max_leaf_nodess=[None],min_impurity_decreases=[0,0.005,0.01])
+"""i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[80],max_depths=[50,100],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[100],max_leaf_nodess=[None],min_impurity_decreases=[0,0.005,0.01])
 
 i_list = i_list.extend(i)
 e_list = e_list.extend(e)
@@ -206,7 +208,7 @@ minweights.extend(minwei)
 maxfeats.extend(maxfe)
 maxleafs.extend(maxlea)
 minimp_decs.extend(minidecs)
-
+"""
 import pickle
 filename = 'randomforest_pickle'
 outfile = open(filename,'wb')

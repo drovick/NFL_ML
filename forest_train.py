@@ -178,10 +178,10 @@ def compare_errors(e_list):
 
 from sklearn.ensemble import RandomForestRegressor
 
-i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[20,50,100],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,100],max_leaf_nodess=[None],min_impurity_decreases=[None])
+i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[20,50,100],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,100],max_leaf_nodess=[None],min_impurity_decreases=[0])
 
 
-i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[None,0.05,0.1])
+i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[0,0.05,0.1])
 
 
 i_list = i_list.extend(i)

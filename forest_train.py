@@ -93,7 +93,7 @@ def multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,o
   test_predictions = tree_model.predict(test_in)
   
   pd.DataFrame(tree_model.feature_importances_,index=input_cols).rename(index=str,columns={0:'Importance'}).sort_values('Importance',ascending=False)
-  return   pd.DataFrame(tree_model.feature_importances_,index=input_cols).rename(index=str,columns={0:'Importance'}).sort_values('Importance',ascending=False),linear_regression_error_frame(test_predictions,test_out,output_cols_)
+  return   tree_model.feature_importances_,linear_regression_error_frame(test_predictions,test_out,output_cols_)
 
 def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_estimators,max_depths,min_samples_splits,min_samples_leafs,min_weight_fraction_leafs,max_featuress,max_leaf_nodess,min_impurity_decreases):
   features_list=[]

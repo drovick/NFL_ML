@@ -254,9 +254,9 @@ i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_li
 
 #i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.05),float(+0.1)])
 
-i_list = i_list.extend(i)
-e_list = e_list.extend(e)
-t_list = t_list.extend(t)
+i_list.extend(i)
+e_list.extend(e)
+t_list.extend(t)
 estimators.extend(estimat)
 maxdeps.extend(maxd)
 minsamps.extend(minsa)

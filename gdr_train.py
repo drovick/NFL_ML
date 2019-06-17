@@ -187,7 +187,7 @@ outfile.close()
 
 print('pickling complete, will now train the second group of models')
 
-i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.01)],n_iter_no_change=[int(+15)],validation_fraction=[float(+0.2)],subsample=[float(+1.0),float(+0.1),float(+0.01),float(+0.001)],learning_rate=[float(+0.1),float(+0.01),float(+0.001)],n_estimators=[100],max_depths=[20,50,100],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[50,100],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.001)])
+i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.01)],n_iter_no_change=[int(+15)],validation_fraction=[float(+0.2)],subsample=[float(+1.0),float(+0.01),float(+0.001)],learning_rate=[float(+0.1),float(+0.01),float(+0.001)],n_estimators=[100],max_depths=[20,100],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[50,100],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.001)])
 print('trained the second group, will now append to list structures..')
 
 i_list.extend(i)

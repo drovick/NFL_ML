@@ -138,7 +138,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
     
     tree_list=[]
     tols_list=[]
-    iter_list=[]
+    iters_list=[]
     frac_list=[]
     sub_list=[]
     rate_list=[]

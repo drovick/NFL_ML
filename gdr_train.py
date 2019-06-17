@@ -137,7 +137,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
     #model_list=[]
     
     tree_list=[]
-    tol_list=[]
+    tols_list=[]
     iter_list=[]
     frac_list=[]
     sub_list=[]
@@ -202,13 +202,14 @@ i_list,e_list,t_list,tols,iters,fracs,subs,rates,estimators,maxdeps,minsamps,min
 
 print('trained the first group')
 
-i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.0001)],n_iter_no_change=[float(+20)],validation_fraction=[float(+0.1)],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[5],max_depths=[20],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.01)])
+i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.01)],n_iter_no_change=[float(+2)],validation_fraction=[float(+0.1)],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[5],max_depths=[20],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.3)])
 
 print('trained the second group, will now append to list structures..')
 
 #i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([ExtraTreesRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[20,50,100,200],max_depths=[50,75],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.005),float(+0.01)])
 
 #i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([ExtraTreesRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.05),float(+0.1)])
+
 
 i_list.extend(i)
 e_list.extend(e)
@@ -226,6 +227,7 @@ minweights.extend(minwei)
 maxfeats.extend(maxfe)
 maxleafs.extend(maxlea)
 minimp_decs.extend(minidecs)
+
 
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 

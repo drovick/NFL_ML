@@ -24,4 +24,4 @@ minimp_decs = pickle.load(infile)
 infile.close()
 
 for i in range(0,len(e_list)):
-    print(multitree_get_errors(0,i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))
+    print(multitree_get_errors(i,i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))

@@ -126,11 +126,11 @@ def multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,o
   tree_model.fit(train_in, train_out)
   test_predictions = tree_model.predict(test_in)
   imps = tree_model.feature_importances_ 
-  print(type(imps))
   #pd.DataFrame(tree_model.feature_importances_,index=input_cols).rename(index=str,columns={0:'Importance'}).sort_values('Importance',ascending=False)
   return   imps,linear_regression_error_frame(test_predictions,test_out,output_cols_)
 
 def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_estimators,max_depths,min_samples_splits,min_samples_leafs,min_weight_fraction_leafs,max_featuress,max_leaf_nodess,min_impurity_decreases):
+  print('entering multitree_loop_lin_results')
   features_list=[]
   tree_list=[]
   error_list=[]
@@ -146,6 +146,8 @@ def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_
   maxleaf_nodes_list=[]
   minimp_dec_list=[]
   
+  i=0
+  
   for mod in models:
     for n_estimators in n_estimators:
       for depth in max_depths:
@@ -156,8 +158,8 @@ def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_
                 for maxleaf_nodes in max_leaf_nodess:
                   for minimp_dec in min_impurity_decreases:
 
-                    print('entering multitree_fit_errors')
-
+                    print('entering multitree_fit_errors.. index:', str(i))
+                    i +=1
                     importances,error = multitree_fit_errors(mod,train_in,train_out,test_in,test_out,input_cols,output_cols_,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)         
 
 
@@ -179,6 +181,7 @@ def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_
                     minimp_dec_list.append(minimp_dec)
                     print('tree trained!')
 
+  print('exiting multitree_loop_lin_results')
   return importances_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list
 
 

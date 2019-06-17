@@ -150,6 +150,8 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
     maxfeat_list=[]
     maxleaf_nodes_list=[]
     minimp_dec_list=[]
+    
+    i=0
   
     for mod in models:
         for tols in tol:
@@ -169,13 +171,17 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             error_frame = pd.DataFrame()
                                                             importances_frame = pd.DataFrame()
                                                             
+                                                            print('entering multitree_fit_errors')
+                                                            c = 0
                                                             for col in output_cols_:
+                                                                print('doing it for column:', str(c))
+                                                                c+=1
                                                                 importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,tol_=tols,n_iter_no_change_=iters,validation_fraction_=frac,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)               
                                                                 error_frame = pd.concat([error_frame,error],axis=0)
                                                                 importances.index = input_cols_            
                                                                 importances_frame = pd.concat([importances_frame,importances],axis=1,ignore_index=False)                                                            
                                                             
-                                                            print('entering multitree_fit_errors')
+                                                            
                                                             
                                                             importances_list.append(importances_frame)                                               
                                                             error_list.append(error_frame)            
@@ -194,7 +200,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             maxfeat_list.append(maxfeat)
                                                             maxleaf_nodes_list.append(maxleaf_nodes)
                                                             minimp_dec_list.append(minimp_dec)
-                                                            print('tree trained!')
+                                                            print('tree trained! index:', str(i))
 
                     return importances_list,error_list,tree_list,tols_list,iters_list,frac_list,sub_list,rate_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list
 

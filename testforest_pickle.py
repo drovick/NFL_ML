@@ -23,16 +23,5 @@ minimp_decs = pickle.load(infile)
 
 infile.close()
 
-#pickle_objs = [i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs]
-
-
-
-#or obj in pickle_objs:
-    #obj = pickle.load(infile)
-    #print(obj)
-
-
-
 for i in range(0,len(e_list)):
     print(multitree_get_errors(0,i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))
-

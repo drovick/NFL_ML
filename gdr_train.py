@@ -104,9 +104,8 @@ def br_multiout_error_frame(test_predictions,test_out,label_cols,multiout_strate
 def br_singleout_error_frame(test_predictions,test_out,label_cols):
   
   lin_medae = median_absolute_error(test_out.values,test_predictions)
-  lin_maxerr = max_error(test_out.values,test_predictions)
-  frame = pd.DataFrame([list([lin_medae,lin_maxerr])])
-  cols = ['MedAbsError','MaxError']
+  frame = pd.DataFrame([lin_medae])
+  cols = ['MedAbsError']
   frame.columns = cols
   
   return frame

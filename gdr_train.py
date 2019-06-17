@@ -90,7 +90,7 @@ def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_col
     tree_model.fit(train_in, train_out)
     test_predictions = tree_model.predict(test_in)
     imps = tree_model.feature_importances_ 
-    print(type(imps))
+    
     return pd.DataFrame(tree_model.feature_importances_,index=input_cols).rename(index=str,columns={0:'Importance'}).sort_values('Importance',ascending=False),linear_regression_error_frame(test_predictions,test_out,output_cols_)
     #return   imps,linear_regression_error_frame(test_predictions,test_out,output_cols_)
 
@@ -138,9 +138,11 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             print('entering multitree_fit_errors')
                                                             c = 0
                                                             for col in output_cols_:
-                                                                print('doing it for column:', str(c))
+                                                                
                                                                 c+=1
                                                                 importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,tol_=tols,n_iter_no_change_=iters,validation_fraction_=frac,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)               
+                                                                if c == 10:
+                                                                    print('model trained for 10 output features, 10 more to go..')
                                                                 error_frame = pd.concat([error_frame,error],axis=0)
                                                                 importances.index = input_cols_            
                                                                 importances_frame = pd.concat([importances_frame,importances],axis=1,ignore_index=False)                                                            

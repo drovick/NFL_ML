@@ -210,7 +210,7 @@ minimp_decs.extend(minidecs)
 print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
 import pickle
-filename = 'extratrees_pickle'
+filename = 'extratrees_pickle_test'
 outfile = open(filename,'wb')
 
 pickle_objs = [i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs]

@@ -173,7 +173,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             
                                                             print('entering multitree_fit_errors')
                                                             c = 0
-                                                            for col in output_cols_:
+                                                            for col in output_cols_[0:3]:
                                                                 print('doing it for column:', str(c))
                                                                 c+=1
                                                                 importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,tol_=tols,n_iter_no_change_=iters,validation_fraction_=frac,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)               

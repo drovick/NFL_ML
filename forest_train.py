@@ -86,6 +86,40 @@ def linear_regression_error_frame(test_predictions,test_out,label_cols):
 
 from sklearn.ensemble import ExtraTreesRegressor
 
+def multitree_get_errors(index,importance_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list,minimp_split_list):
+      print('Model:',str(tree_list[tree]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]), ', min_samples_split:', str(minsamp_split_list[index]))
+  print('min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]), ', max_features:,', str(maxfeat_list[index]))
+  print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]), ', min_impurity_split:', str(minimp_split_list[index]))
+  return error_list[index]
+
+def multitree_get_tree(index,importance_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list,minimp_split_list):
+  print('Model:',str(tree_list[tree]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]), ', min_samples_split:', str(minsamp_split_list[index]))
+  print('min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]), ', max_features:,', str(maxfeat_list[index]))
+  print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]), ', index', str(index))
+  return tree_list[index]
+
+def multitree_get_importances(index,importance_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list,minimp_split_list):
+  print('Model:',str(tree_list[tree]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]), ', min_samples_split:', str(minsamp_split_list[index]))
+  print('min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]), ', max_features:,', str(maxfeat_list[index]))
+  print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]), ', index:', str(index))
+  return importance_list[index]
+
+def compare_errors(e_list):
+  best_model = 0
+  best_error = 500
+  
+  for i in range(0,e_list):
+    passing_err = e_list[i].loc['Passing_Yds','RMSError']
+    rushing_err = e_list[i].loc['Rushing_Yds','RMSError']
+    receiving_err = e_list[i].loc['Receiving_Yds','RMSError']
+    error_sum = passing_err + rushing_error + receiving_err
+    
+    if error_sum < best_error:
+      best_error = error_sum
+      best_model = i
+  
+  return best_model
+
 def multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_estimators_=10,max_depth_=None,min_samples_split_=2,min_samples_leaf_=1,min_weight_fraction_leaf_=0,max_features_=None,max_leaf_nodes_=None,min_impurity_decrease_=0):
 
   tree_model = model(n_estimators=n_estimators_,max_depth=max_depth_,min_samples_split=min_samples_split_,min_samples_leaf=min_samples_leaf_,min_weight_fraction_leaf=min_weight_fraction_leaf_,max_features=max_features_,max_leaf_nodes=max_leaf_nodes_,min_impurity_decrease=min_impurity_decrease_) 
@@ -147,54 +181,78 @@ def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_
 
   return importances_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list
 
-
-def multitree_get_errors(index,importance_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list,minimp_split_list):
-  print('Model:',str(tree_list[tree]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]), ', min_samples_split:', str(minsamp_split_list[index]))
-  print('min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]), ', max_features:,', str(maxfeat_list[index]))
-  print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]), ', min_impurity_split:', str(minimp_split_list[index]))
-  return error_list[index]
-
-def multitree_get_tree(index,importance_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list,minimp_split_list):
-  print('Model:',str(tree_list[tree]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]), ', min_samples_split:', str(minsamp_split_list[index]))
-  print('min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]), ', max_features:,', str(maxfeat_list[index]))
-  print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]), ', index', str(index))
-  return tree_list[index]
-
-def multitree_get_importances(index,importance_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list,minimp_split_list):
-  print('Model:',str(tree_list[tree]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]), ', min_samples_split:', str(minsamp_split_list[index]))
-  print('min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]), ', max_features:,', str(maxfeat_list[index]))
-  print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]), ', index:', str(index))
-  return importance_list[index]
-
-def compare_errors(e_list):
-  best_model = 0
-  best_error = 500
-  
-  for i in range(0,e_list):
-    passing_err = e_list[i].loc['Passing_Yds','RMSError']
-    rushing_err = e_list[i].loc['Rushing_Yds','RMSError']
-    receiving_err = e_list[i].loc['Receiving_Yds','RMSError']
-    error_sum = passing_err + rushing_error + receiving_err
+"""def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,output_cols_,tol_=0.001,n_iter_no_change_=None,validation_fraction=None,subsample_=0.1,learning_rate_=0.1,n_estimators_=10,max_depth_=None,min_samples_split_=2,min_samples_leaf_=1,min_weight_fraction_leaf_=0,max_features_=None,max_leaf_nodes_=None,min_impurity_decrease_=0):
     
-    if error_sum < best_error:
-      best_error = error_sum
-      best_model = i
-  
-  return best_model
+  tree_model = model(tol=tol_=n_iter_no_change=n_iter_no_change_,validation_fraction=validation_fraction_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,max_depth=max_depth_,min_samples_split=min_samples_split_,min_samples_leaf=min_samples_leaf_,min_weight_fraction_leaf=min_weight_fraction_leaf_,max_features=max_features_,max_leaf_nodes=max_leaf_nodes_,min_impurity_decrease=min_impurity_decrease_) 
+  tree_model.fit(train_in, train_out)
+  test_predictions = tree_model.predict(test_in)
+  imps = tree_model.feature_importances_ 
+  print(type(imps))
+  #pd.DataFrame(tree_model.feature_importances_,index=input_cols).rename(index=str,columns={0:'Importance'}).sort_values('Importance',ascending=False)
+  return   imps,linear_regression_error_frame(test_predictions,test_out,output_cols_)
 
+def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_cols_,output_cols_,tol,n_iter_no_change,validation_fraction,subsample,learning_rate,n_estimators,max_depths,min_samples_splits,min_samples_leafs,min_weight_fraction_leafs,max_featuress,max_leaf_nodess,min_impurity_decreases):
+  features_list=[]
+  tree_list=[]
+  error_list=[]
+  importances_list=[]
+  #model_list=[]
+  
+  n_estimators_list=[]
+  maxdep_list=[]
+  minsamp_split_list=[]
+  minsamp_leaf_list=[]
+  minweight_frac_leaf_list=[]
+  maxfeat_list=[]
+  maxleaf_nodes_list=[]
+  minimp_dec_list=[]
+  
+  for mod in models:
+    for n_estimators in n_estimators:
+      for depth in max_depths:
+        for minsamp_split in min_samples_splits:
+          for minsamp_leaf in min_samples_leafs:
+            for minweight_frac in min_weight_fraction_leafs:
+              for maxfeat in max_featuress:
+                for maxleaf_nodes in max_leaf_nodess:
+                  for minimp_dec in min_impurity_decreases:
+
+                    print('entering multitree_fit_errors')
+
+                    importances,error = multitree_fit_errors(mod,train_in,train_out,test_in,test_out,input_cols,output_cols_,tol_=tol,n_iter_no_change_=n_iter_no_change,validation_fraction_=validation_fraction,subsample_=subsample,learning_rate_=learning_rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)         
+
+                    print(type(importances))
+
+                    importances_list.append(importances)
+
+                    print(type(importances_list))
+
+                    error_list.append(error)            
+                    tree_list.append(str(mod))
+                        
+                    n_estimators_list.append(n_estimators)
+                    maxdep_list.append(depth)
+                    minsamp_split_list.append(minsamp_split)
+                    minsamp_leaf_list.append(minsamp_leaf)
+                    minweight_frac_leaf_list.append(minweight_frac)
+                    maxfeat_list.append(maxfeat)
+                    maxleaf_nodes_list.append(maxleaf_nodes)
+                    minimp_dec_list.append(minimp_dec)
+                    print('tree trained!')
+
+  return importances_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list
+
+from sklearn.ensemble import GradientBoostingRegressor
+"""
 from sklearn.ensemble import RandomForestRegressor
 
-i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[10],max_depths=[20],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30],max_leaf_nodess=[None],min_impurity_decreases=[float(+0)])
+#i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[20,50,100,200],max_depths=[50,75],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.005),float(+0.01)])
 
-i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs =multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[10],max_depths=[20],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30],max_leaf_nodess=[None],min_impurity_decreases=[float(+0)])
+#i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[20,50,100,200],max_depths=[50,75],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.005),float(+0.01)])
 
+i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs == multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[20,50,100,200],max_depths=[50,75],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.005),float(+0.01)])
 
-#i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[20,50,100,200],max_depths=[50,75],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[0,0.005,0.01])
-
-
-
-#i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.05),float(+0.1)])
-
+i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.05),float(+0.1)])
 
 i_list = i_list.extend(i)
 e_list = e_list.extend(e)
@@ -207,6 +265,20 @@ minweights.extend(minwei)
 maxfeats.extend(maxfe)
 maxleafs.extend(maxlea)
 minimp_decs.extend(minidecs)
+
+"""i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.05),float(+0.1)])
+
+i_list = i_list.extend(i)
+e_list = e_list.extend(e)
+t_list = t_list.extend(t)
+estimators.extend(estimat)
+maxdeps.extend(maxd)
+minsamps.extend(minsa)
+minsamps1.extend(minsa1)
+minweights.extend(minwei)
+maxfeats.extend(maxfe)
+maxleafs.extend(maxlea)
+minimp_decs.extend(minidecs)"""
 
 import pickle
 filename = 'randomforest_pickle'

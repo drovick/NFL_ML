@@ -50,42 +50,6 @@ from sklearn.metrics import mean_squared_log_error
 from sklearn.metrics import median_absolute_error
 from sklearn.metrics import r2_score
 
-"""
-def multiout_error_frame(test_predictions,test_out,label_cols,multiout_strategy='raw_values'):
-  
-  lin_mse = mean_squared_error(test_out,test_predictions,multioutput=multiout_strategy)
-  
-  lin_rmse = pd.Series(np.sqrt(lin_mse),index=label_cols)
-  lin_mae = pd.Series(mean_absolute_error(test_out,test_predictions,multioutput=multiout_strategy),index=output_cols)
-  lin_evs = pd.Series(explained_variance_score(test_out,test_predictions,multioutput=multiout_strategy),index=output_cols)
-  lin_r2 = pd.Series(r2_score(test_out,test_predictions,multioutput=multiout_strategy),index=output_cols)
-  
-  frame = pd.concat([lin_r2,lin_evs,lin_mae,lin_rmse],axis=1,sort=False)
-  cols = ['R2Score','ExpVarScore','MeanAbsltError','RMSError']
-  frame.columns = cols
-  
-  return frame
-
-def singleout_error_frame(test_predictions,test_out,label_cols):
-  
-  error = pd.DataFrame()
-  for col in range(len(label_cols)):
-    lin_medae = median_absolute_error(test_out.values[:,col],test_predictions[:,col])
-    row = pd.DataFrame(data=[lin_medae],columns=['MedianAbsError'])
-    error = pd.concat([error,row],ignore_index=False,sort=False,axis=0)
-  
-  error.index = label_cols
-  
-  return error
-
-def linear_regression_error_frame(test_predictions,test_out,label_cols):
-  
-  multiout = multiout_error_frame(test_predictions,test_out,label_cols)
-  singleout = singleout_error_frame(test_predictions,test_out,label_cols)
-  
-  return pd.concat([singleout,multiout],ignore_index=False,sort=False,axis=1)
-"""
-
 def br_multiout_error_frame(test_predictions,test_out,label_cols,multiout_strategy='raw_values'):
       
   lin_mse = mean_squared_error(test_out,test_predictions,multioutput=multiout_strategy)
@@ -173,7 +137,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             
                                                             print('entering multitree_fit_errors')
                                                             c = 0
-                                                            for col in output_cols_[0:3]:
+                                                            for col in output_cols_:
                                                                 print('doing it for column:', str(c))
                                                                 c+=1
                                                                 importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,tol_=tols,n_iter_no_change_=iters,validation_fraction_=frac,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)               
@@ -204,18 +168,25 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 
                     return importances_list,error_list,tree_list,tols_list,iters_list,frac_list,sub_list,rate_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list
 
-i_list,e_list,t_list,tols,iters,fracs,subs,rates,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.1)],n_iter_no_change=[int(+5)],validation_fraction=[float(+0.1)],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[5],max_depths=[50],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.01)])
+#i_list,e_list,t_list,tols,iters,fracs,subs,rates,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.1)],n_iter_no_change=[int(+5)],validation_fraction=[float(+0.1)],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[5],max_depths=[50],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.01)])
+#i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.1)],n_iter_no_change=[int(+5)],validation_fraction=[float(+0.1)],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[5],max_depths=[20],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.3)])
 
-print('trained the first group')
+i_list,e_list,t_list,tols,iters,fracs,subs,rates,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.01)],n_iter_no_change=[+15],validation_fraction=[float(+0.2)],subsample=[float(+1.0),float(+0.1),float(+0.01),float(+0.001)],learning_rate=[float(+0.1),float(+0.01),float(+0.001)],n_estimators=[100],max_depths=[50,75],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.001),float(+0.01)])
+print('trained the first group, will pickle and save it to a file before proceeding..')
 
-i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.1)],n_iter_no_change=[int(+5)],validation_fraction=[float(+0.1)],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[5],max_depths=[20],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.3)])
+print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
+import pickle
+filename = 'gdr_pickle_1'
+outfile = open(filename,'wb')
+pickle_objs = [i_list,e_list,t_list,tols,iters,fracs,subs,rates,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs]
+for obj in pickle_objs:
+  pickle.dump(obj,outfile)
+outfile.close()
 
+print('pickling complete, will now train the second group of models')
+
+i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.01)],n_iter_no_change=[int(+15)],validation_fraction=[float(+0.2)],subsample=[float(+1.0),float(+0.1),float(+0.01),float(+0.001)],learning_rate=[float(+0.1),float(+0.01),float(+0.001)],n_estimators=[100],max_depths=[20,50,100],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[50,100],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.001)])
 print('trained the second group, will now append to list structures..')
-
-#i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([ExtraTreesRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[20,50,100,200],max_depths=[50,75],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.005),float(+0.01)])
-
-#i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([ExtraTreesRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[100],max_depths=[None],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[30,50,100,None],max_leaf_nodess=[None],min_impurity_decreases=[float(+0),float(+0.05),float(+0.1)])
-
 
 i_list.extend(i)
 e_list.extend(e)
@@ -234,18 +205,15 @@ maxfeats.extend(maxfe)
 maxleafs.extend(maxlea)
 minimp_decs.extend(minidecs)
 
-
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
 import pickle
-filename = 'gdr_pickle_test'
+filename = 'gdr_pickle'
 outfile = open(filename,'wb')
-
 pickle_objs = [i_list,e_list,t_list,tols,iters,fracs,subs,rates,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs]
 
 for obj in pickle_objs:
   pickle.dump(obj,outfile)
 
 outfile.close()
-
 print('pickling complete! EOF!')

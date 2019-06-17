@@ -92,7 +92,7 @@ def multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,o
   tree_model.fit(train_in, train_out)
   test_predictions = tree_model.predict(test_in)
   imps = tree_model.feature_importances_ 
-  print type(imps)
+  print(type(imps))
   #pd.DataFrame(tree_model.feature_importances_,index=input_cols).rename(index=str,columns={0:'Importance'}).sort_values('Importance',ascending=False)
   return   imps,linear_regression_error_frame(test_predictions,test_out,output_cols_)
 

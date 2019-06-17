@@ -181,7 +181,7 @@ def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_
                     minimp_dec_list.append(minimp_dec)
                     print('tree trained!')
 
-  print(str(n_estimators_list[0])
+  print(str(n_estimators_list[0]))
   print('exiting multitree_loop_lin_results')
   return importances_list,error_list,tree_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list
 

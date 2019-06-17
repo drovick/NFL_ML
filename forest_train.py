@@ -188,7 +188,7 @@ def multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_
 
 from sklearn.ensemble import RandomForestRegressor
 
-i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[int(10)],max_depths=[50],min_samples_splits=[5],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.01)])
+i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[int(10),int(2)],max_depths=[10,5],min_samples_splits=[200,100],min_samples_leafs=[100,200],min_weight_fraction_leafs=[0.5,0.1],max_featuress=[5,10],max_leaf_nodess=[5,10],min_impurity_decreases=[float(+0.01),float(+0.1)])
 
 i,e,t,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = multitree_loop_lin_results([RandomForestRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,n_estimators=[int(5)],max_depths=[5],min_samples_splits=[2],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[75],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.01)])
 

@@ -39,7 +39,7 @@ train_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True
 
 output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passing_Yds','Punt Returns_TD','Receiving_Rec','Receiving_TD','Receiving_Yds','Rushing_TD','Rushing_Yds','Scoring_2PM','Scoring_FGM','Scoring_XPM','Scoring_FG_miss','Scoring_XP_miss','WLT','Team_Pts_for','Team_Pts_against','Team_Pts_diff']
 #input_cols = set(train_set.columns.values) - set(output_cols)
-input_cols = set(full_set.columns.values) - set(output_cols)
+input_cols = set(full_set.columns) - set(output_cols)
 input_cols.remove('Scoring_Pts')
 input_cols.remove('Scoring_Sfty')
 input_cols.remove('Scoring_TD')
@@ -75,9 +75,16 @@ def normalize_input(input_frame,cat_cols,means,std_devs):
     cat = input_frame[cat_cols].copy()
     return pd.concat([cat,normalized],axis=1,sort=False)
 
+"""
 input_means = train_set_input.mean()
 input_std_deviations = train_set_input.std()
 categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
+"""
+
+input_means = pd.DataFrame(X_test, columns=input_cols).mean()
+input_std_deviations = pd.DataFrame(X_val,columns=input_cols).std()
+categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
+
 
 """
 test_set_input_normalized = normalize_input(test_set_input,categorical_ish,input_means,input_std_deviations)

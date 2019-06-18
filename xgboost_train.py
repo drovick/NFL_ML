@@ -109,7 +109,7 @@ def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_col
         'evals' : [(xgbtest, 'test')]
         }
     
-    tree_model = xgb.xgbRegressor(early_stopping_rounds=n_iter_no_change_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,max_depth=max_depth_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_,params)
+    tree_model = xgb.xgbRegressor(params,early_stopping_rounds=n_iter_no_change_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,max_depth=max_depth_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_)
      
     tree_model.fit(train_in, train_out)
     test_predictions = tree_model.predict(test_in)

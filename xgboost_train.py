@@ -97,7 +97,7 @@ def linear_regression_error_frame(test_predictions,test_out,label_cols):
   
   return pd.concat([singleout,multiout],ignore_index=False,sort=False,axis=1)
 
-def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_iter_no_change_=None,subsample_=0.1,learning_rate_=0.1,n_estimators_=10,max_depth_=None,min_samples_leaf_=1,max_features_=1.0,min_impurity_decrease_=0):
+def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_iter_no_change_=None,subsample_=0.1,learning_rate_=0.1,n_estimators_=10,max_depth_=20,min_samples_leaf_=1,max_features_=1.0,min_impurity_decrease_=0):
     
     # Convert test data from numpy to XGBoost format
     xgbtest = xgb.DMatrix(test_in, label=test_out)

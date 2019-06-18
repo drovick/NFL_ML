@@ -91,8 +91,8 @@ param = { 'tree_booster'
          'tree_method': 'auto' # Use GPU accelerated algorithm
          }
 
-dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output)
-dtest = xgb.DMatrix(test_set_input_normalized, test_set_output)
+dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output['Passing_Yds'])
+dtest = xgb.DMatrix(test_set_input_normalized, test_set_output['Passing_Yds'])
 
 
 gpu_res = {}
@@ -102,9 +102,5 @@ tmp = time.time()
 xgb.train(param, dtrain, num_round, evals=[(dtest, 'test')], evals_result=gpu_res)
 print("GPU Training Time: %s seconds" % (str(time.time() - tmp)))
 
-# Repeat for CPU algorithm
-tmp = time.time()
-param['tree_method'] = 'hist'
-cpu_res = {}
-xgb.train(param, dtrain, num_round, evals=[(dtest, 'test')], evals_result=cpu_res)
-print("CPU Training Time: %s seconds" % (str(time.time() - tmp)))
+print(gpu_res)
+

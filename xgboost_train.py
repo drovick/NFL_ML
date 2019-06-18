@@ -104,8 +104,8 @@ def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_col
     
     params = { 'booster' : 'gbtree',
         'tree_method' : 'gpu_hist', # Use GPU accelerated algorithm
-        'predictor' : 'gpu_predictor'
-        'objective' : 'reg:squarederror'
+        'predictor' : 'gpu_predictor',
+        'objective' : 'reg:squarederror',
         'evals' : [(xgbtest, 'test')]
         }
     

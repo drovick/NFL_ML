@@ -123,7 +123,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                 for frac in validation_fraction:
                     for sub in subsample:
                         for rate in learning_rate:
-                            for n_estimators in n_estimators:
+                            for n in n_estimators:
                                 for depth in max_depths:
                                     for minsamp_split in min_samples_splits:
                                         for minsamp_leaf in min_samples_leafs:
@@ -137,8 +137,23 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             
                                                             print('entering multitree_fit_errors')
                                                             c = 0
-                                                            for col in output_cols_:
-                                                                
+                                                            
+                                                            tree_list.append(str(mod))                                                            
+                                                            tols_list.append(tols)
+                                                            iters_list.append(frac)
+                                                            frac_list.append(frac)
+                                                            sub_list.append(sub)
+                                                            rate_list.append(rate)   
+                                                            n_estimators_list.append(n)
+                                                            maxdep_list.append(depth)
+                                                            minsamp_split_list.append(minsamp_split)
+                                                            minsamp_leaf_list.append(minsamp_leaf)
+                                                            minweight_frac_leaf_list.append(minweight_frac)
+                                                            maxfeat_list.append(maxfeat)
+                                                            maxleaf_nodes_list.append(maxleaf_nodes)
+                                                            minimp_dec_list.append(minimp_dec)
+                                                            
+                                                            for col in output_cols_:                                                              
                                                                 c+=1
                                                                 importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,tol_=tols,n_iter_no_change_=iters,validation_fraction_=frac,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)               
                                                                 if c == 10:
@@ -152,20 +167,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             importances_list.append(importances_frame)                                               
                                                             error_list.append(error_frame)            
                                                             
-                                                            tree_list.append(str(mod))                                                            
-                                                            tols_list.append(tols)
-                                                            iters_list.append(frac)
-                                                            frac_list.append(frac)
-                                                            sub_list.append(sub)
-                                                            rate_list.append(rate)   
-                                                            n_estimators_list.append(n_estimators)
-                                                            maxdep_list.append(depth)
-                                                            minsamp_split_list.append(minsamp_split)
-                                                            minsamp_leaf_list.append(minsamp_leaf)
-                                                            minweight_frac_leaf_list.append(minweight_frac)
-                                                            maxfeat_list.append(maxfeat)
-                                                            maxleaf_nodes_list.append(maxleaf_nodes)
-                                                            minimp_dec_list.append(minimp_dec)
+                                                            
                                                             print('tree trained! index:', str(i))
                                                             i +=1
 

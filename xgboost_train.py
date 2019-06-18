@@ -180,16 +180,16 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 
     return importances_list,error_list,tree_list,iters_list,sub_list,rate_list,n_estimators_list,maxdep_list,minsamp_leaf_list,maxfeat_list,minimp_dec_list
 
+###Training starts here..
 
+print('about to start training the first group..')
 tmp = time.time()
-print("GPU Training Time: %s seconds" % (str(time.time() - tmp)))
-
-
 i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[+4],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[50],max_depths=[20,50],min_samples_leafs=[1],max_featuress=[None],min_impurity_decreases=[float(+0.005)])
-print('trained the first group, will pickle and save it to a file before proceeding..')
- 
+print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
+
 """
-print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
+print('will pickle and save it to a file before proceeding..')  
+ print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 import pickle
 filename = 'gdr_pickle_1'
 outfile = open(filename,'wb')
@@ -197,12 +197,14 @@ pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps
 for obj in pickle_objs:
   pickle.dump(obj,outfile)
 outfile.close()
+print('pickling complete, will now train the second group of models')
 """
 
-print('pickling complete, will now train the second group of models')
-
+tmp = time.time()
+print('about to start training the second group..')
 i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+4)],subsample=[float(+0.01)],learning_rate=[float(+0.01),float(+0.001)],n_estimators=[50],max_depths=[40],min_samples_leafs=[1],max_featuress=[None],min_impurity_decreases=[float(+0.005)])
-print('trained the second group, will now append to list structures..')
+print('trained the second group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
+print('will now append to lists..')     
 
 i_list.extend(i)
 e_list.extend(e)
@@ -259,4 +261,5 @@ for obj in pickle_objs:
 
 outfile.close()
 """
-print('pickling complete! EOF!')
+print('pickling complete! check file:',str(filename))
+print('EOF!')

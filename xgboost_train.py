@@ -87,12 +87,12 @@ def linear_regression_error_frame(test_predictions,test_out,label_cols):
 
 num_round = 100
 
-param = { # Specify multiclass classification
+param = { 'tree_booster'
          'tree_method': 'auto' # Use GPU accelerated algorithm
          }
 
-dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output['Passing_Yds'])
-dtest = xgb.DMatrix(test_set_input_normalized, test_set_output['Passing_Yds'])
+dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output)
+dtest = xgb.DMatrix(test_set_input_normalized, test_set_output)
 
 
 gpu_res = {}

@@ -181,7 +181,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
     i=0
   
     for mod in models:
-        for iters in n_iter_no_change:
+        for iters in n_iter_no_change__:
             for sub in subsample:
                 for rate in learning_rate:
                     for n in n_estimators:

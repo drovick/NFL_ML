@@ -12,6 +12,11 @@ infile = open(filename,'rb')
 i_list = pickle.load(infile)
 e_list = pickle.load(infile)
 t_list = pickle.load(infile)
+
+iters = pickle.load(infile)
+subs = pickle.load(infile)
+rates = pickle.load(infile)
+
 estimators = pickle.load(infile)
 maxdeps = pickle.load(infile)
 minsamps = pickle.load(infile)

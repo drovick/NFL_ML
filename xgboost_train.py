@@ -103,5 +103,5 @@ xgb.train(param, dtrain, num_round, evals=[(dtest, 'test')], evals_result=gpu_re
 print("GPU Training Time: %s seconds" % (str(time.time() - tmp)))
 
 print(gpu_res)
-print(gpu_res['rmse'][0])
+print(gpu_res['test']['rmse'][0])
 

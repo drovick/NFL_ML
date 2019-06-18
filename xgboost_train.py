@@ -191,7 +191,7 @@ print('trained the first group, GPU Training Time: %s seconds'% (str(time.time()
 
 
 print('will pickle and save it to a file before proceeding..')  
- print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
+print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 import pickle
 filename = 'xgbpickle_1'
 outfile = open(filename,'wb')

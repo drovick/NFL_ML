@@ -109,9 +109,9 @@ def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_col
         'evals' : [(xgbtest, 'test')]
         }
     
-    tree_model = xgb.XGBRegressor(max_depth=max_depth_,early_stopping_rounds=n_iter_no_change_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_,**params)
+    tree_model = xgb.XGBRegressor(max_depth=max_depth_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_,**params)
      
-    tree_model.fit(train_in, train_out)
+    tree_model.fit(train_in.values,train_out.values,early_stopping_rounds=n_iter_no_change_)
     test_predictions = tree_model.predict(test_in)
     imps = tree_model.feature_importances_ 
     
@@ -164,7 +164,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                         error_list.append(error_frame)            
                                                             
                                         tree_list.append(str(mod))                                                            
-                                        iters_list.append(frac)
+                                        iters_list.append(iters)
                                         sub_list.append(sub)
                                         rate_list.append(rate)   
                                         n_estimators_list.append(n_estimators)
@@ -182,7 +182,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 
 print('about to start training the first group..')
 tmp = time.time()
-i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[+4],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[50],max_depths=[20,50],min_samples_leafs=[1],max_featuress=[0.2],min_impurity_decreases=[float(+0.005)])
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[+4],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[4],max_depths=[10],min_samples_leafs=[5],max_featuress=[0.2],min_impurity_decreases=[float(+0.1)])
 print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 
 """
@@ -200,7 +200,7 @@ print('pickling complete, will now train the second group of models')
 
 tmp = time.time()
 print('about to start training the second group..')
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+4)],subsample=[float(+0.01)],learning_rate=[float(+0.01),float(+0.001)],n_estimators=[50],max_depths=[40],min_samples_leafs=[1],max_featuress=[0.2],min_impurity_decreases=[float(+0.005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+4)],subsample=[float(+0.01)],learning_rate=[float(+0.01)],n_estimators=[4],max_depths=[10],min_samples_leafs=[5],max_featuress=[0.2],min_impurity_decreases=[float(+0.1)])
 print('trained the second group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 print('will now append to lists..')     
 

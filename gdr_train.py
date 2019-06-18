@@ -167,6 +167,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             maxleaf_nodes_list.append(maxleaf_nodes)
                                                             minimp_dec_list.append(minimp_dec)
                                                             print('tree trained! index:', str(i))
+                                                            i +=1
 
                     return importances_list,error_list,tree_list,tols_list,iters_list,frac_list,sub_list,rate_list,n_estimators_list,maxdep_list,minsamp_split_list,minsamp_leaf_list,minweight_frac_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list
 

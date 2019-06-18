@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import datetime
 import numpy as np
-
 import xgboost as xgb
 import numpy as np
 import time
@@ -14,12 +13,19 @@ dataset.drop(columns='Previous_D_Punting_Blck',inplace=True)
 dataset.drop(columns=['Unnamed: 0', 'C', 'CB', 'DB', 'DE', 'DL', 'DT', 'G', 'LB', 'LS', 'LT',
         'NT', 'OG', 'OL', 'OT', 'P', 'T'],  inplace=True)
 
-test_set = pd.DataFrame(dataset[dataset.Date>=datetime.datetime(2018,1,1)])
-train_set = pd.DataFrame(dataset[dataset.Date<datetime.datetime(2018,1,1)])
+
+test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
+val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
+train_set = pd.DataFrame(dataset[dataset.Date<datetime.datetime(2017,1,1)])
 
 test_set.reset_index(inplace=True)
 test_set.drop(columns='index', inplace=True)
 test_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
+
+val_set.reset_index(inplace=True)
+val_set.drop(columns='index', inplace=True)
+val_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
+
 
 train_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
 
@@ -30,10 +36,15 @@ input_cols.remove('Scoring_Sfty')
 input_cols.remove('Scoring_TD')
 input_cols = list(input_cols)
 
-train_set_input = train_set[input_cols]
-train_set_output = train_set[output_cols]
+
 test_set_input = test_set[input_cols]
 test_set_output = test_set[output_cols]
+
+val_set_input = val_set[input_cols]
+val_set_output = val_set[output_cols]
+
+train_set_input = train_set[input_cols]
+train_set_output = train_set[output_cols]
 
 def normalize_input(input_frame,cat_cols,means,std_devs):
     normalized = ((input_frame.drop(columns=cat_cols)-means.drop(labels=cat_cols))/std_devs.drop(labels=cat_cols)).copy()
@@ -44,8 +55,9 @@ input_means = train_set_input.mean()
 input_std_deviations = train_set_input.std()
 categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
 
-train_set_input_normalized = normalize_input(train_set_input,categorical_ish,input_means,input_std_deviations)
 test_set_input_normalized = normalize_input(test_set_input,categorical_ish,input_means,input_std_deviations)
+val_set_input_normalized = normalize_input(val_set_input,categorical_ish,input_means,input_std_deviations)
+train_set_input_normalized = normalize_input(train_set_input,categorical_ish,input_means,input_std_deviations)
 
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import explained_variance_score
@@ -85,23 +97,166 @@ def linear_regression_error_frame(test_predictions,test_out,label_cols):
   
   return pd.concat([singleout,multiout],ignore_index=False,sort=False,axis=1)
 
-num_round = 100
+def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_iter_no_change_=None,subsample_=0.1,learning_rate_=0.1,n_estimators_=10,max_depth_=None,min_samples_leaf_=1,max_features_=1.0,min_impurity_decrease_=0):
+    
+    # Convert test data from numpy to XGBoost format
+    xgbtest = xgb.DMatrix(test_in, label=test_out)
+    
+    params = { 'booster' : 'gbtree',
+        'tree_method' : 'gpu_hist', # Use GPU accelerated algorithm
+        'predictor' : 'gpu_predictor'
+        'eval_metric' : 'rmse'
+        'num_boost_round' : 500
+        'objective' : 'reg:squarederror'
+        'evals' : [(xgbtest, 'test')]
+        }
+    
+    tree_model = xgb.xgbRegressor(early_stopping_rounds=n_iter_no_change_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,max_depth=max_depth_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_,params)
+     
+    tree_model.fit(train_in, train_out)
+    test_predictions = tree_model.predict(test_in)
+    imps = tree_model.feature_importances_ 
+    
+    return pd.DataFrame(tree_model.feature_importances_,index=input_cols).rename(index=str,columns={0:'Importance'}).sort_values('Importance',ascending=False),linear_regression_error_frame(test_predictions,test_out,output_cols_)
+    #return   imps,linear_regression_error_frame(test_predictions,test_out,output_cols_)
 
-param = { 'tree_booster'
-         'tree_method': 'auto' # Use GPU accelerated algorithm
-         }
+def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_iter_no_change,subsample,learning_rate,n_estimators,max_depths,min_samples_leafs,max_featuress,min_impurity_decreases):
+    features_list=[]
+    error_list=[]
+    importances_list=[]
+     
+    tree_list=[]
+    iters_list=[]
 
-dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output['Passing_Yds'])
-dtest = xgb.DMatrix(test_set_input_normalized, test_set_output['Passing_Yds'])
+    sub_list=[]
+    rate_list=[]
+    n_estimators_list=[]
+    maxdep_list=[]
+    minsamp_leaf_list=[]
+    maxfeat_list=[]
+    minimp_dec_list=[]
+    
+    i=0
+  
+    for mod in models:
+        for iters in n_iter_no_change:
+            for sub in subsample:
+                for rate in learning_rate:
+                    for n_estimators in n_estimators:
+                        for depth in max_depths:
+                            for minsamp_leaf in min_samples_leafs:
+                                for maxfeat in max_featuress:
+                                    for minimp_dec in min_impurity_decreases:
+
+                                        error_frame = pd.DataFrame()
+                                        importances_frame = pd.DataFrame()
+                                                            
+                                        print('entering multitree_fit_errors')
+                                        #c = 0
+                                        for col in output_cols_:
+                                            #c+=1
+                                            importances,error = gbr_multitree_fit_errors(mod,validaton_set,train_in,train_out[col],test_in,test_out[col],input_cols,col,tol_=tols,n_iter_no_change_=iters,validation_fraction_=frac,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_split_=minsamp_split,min_samples_leaf_=minsamp_leaf,min_weight_fraction_leaf_=minweight_frac,max_features_=maxfeat,max_leaf_nodes_=maxleaf_nodes,min_impurity_decrease_=minimp_dec)               
+                                            #if c == 10:
+                                                #print('model trained for 10 output features, 10 more to go..')
+                                            error_frame = pd.concat([error_frame,error],axis=0)
+                                            importances.index = input_cols_            
+                                            importances_frame = pd.concat([importances_frame,importances],axis=1,ignore_index=False)                                                            
+                                                                                                                                                                                   
+                                        importances_list.append(importances_frame)                                               
+                                        error_list.append(error_frame)            
+                                                            
+                                        tree_list.append(str(mod))                                                            
+                                        iters_list.append(frac)
+                                        sub_list.append(sub)
+                                        rate_list.append(rate)   
+                                        n_estimators_list.append(n_estimators)
+                                        maxdep_list.append(depth)
+                                        minsamp_leaf_list.append(minsamp_leaf)
+                                        maxfeat_list.append(maxfeat)
+                                        minimp_dec_list.append(minimp_dec)
+                                        
+                                        print('tree trained! index:', str(i))
+                                        i +=1
+
+    return importances_list,error_list,tree_list,iters_list,sub_list,rate_list,n_estimators_list,maxdep_list,minsamp_leaf_list,maxfeat_list,minimp_dec_list
 
 
-gpu_res = {}
 tmp = time.time()
-
-# Train model
-xgb.train(param, dtrain, num_round, evals=[(dtest, 'test')], evals_result=gpu_res)
 print("GPU Training Time: %s seconds" % (str(time.time() - tmp)))
 
-print(gpu_res)
-print(gpu_res['test']['rmse'][0])
 
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[+4],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[50],max_depths=[20,50],min_samples_leafs=[1],max_featuress=[None],min_impurity_decreases=[float(+0.005)])
+print('trained the first group, will pickle and save it to a file before proceeding..')
+ 
+"""
+print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
+import pickle
+filename = 'gdr_pickle_1'
+outfile = open(filename,'wb')
+pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
+for obj in pickle_objs:
+  pickle.dump(obj,outfile)
+outfile.close()
+"""
+
+print('pickling complete, will now train the second group of models')
+
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+4)],subsample=[float(+0.01)],learning_rate=[float(+0.01),float(+0.001)],n_estimators=[50],max_depths=[40],min_samples_leafs=[1],max_featuress=[None],min_impurity_decreases=[float(+0.005)])
+print('trained the second group, will now append to list structures..')
+
+i_list.extend(i)
+e_list.extend(e)
+t_list.extend(t)
+iters.extend(it)
+subs.extend(su)
+rates.extend(ra)
+estimators.extend(estimat)
+maxdeps.extend(maxd)
+minsamps.extend(minsa)
+maxfeats.extend(maxfe)
+minimp_decs.extend(minidecs)
+
+print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
+
+filename = 'xgboost_test'
+outfile = open(filename,'wb')
+pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
+
+for obj in pickle_objs:
+  pickle.dump(obj,outfile)
+
+outfile.close()
+"""
+print('pickling complete, training the final group..')
+
+i,e,t,tol,it,fr,su,ra,estimat,maxd,minsa,minsa1,minwei,maxfe,maxlea,minidecs = gbr_multitree_loop_lin_results([GradientBoostingRegressor],train_set_input_normalized,train_set_output,test_set_input_normalized,test_set_output,input_cols,output_cols,tol=[float(+0.01)],n_iter_no_change=[int(+4)],validation_fraction=[float(+0.2)],subsample=[float(+0.005)],learning_rate=[float(+0.001)],n_estimators=[50],max_depths=[20,50],min_samples_splits=[15],min_samples_leafs=[1],min_weight_fraction_leafs=[0],max_featuress=[None],max_leaf_nodess=[None],min_impurity_decreases=[float(+0.005)])
+print('trained the final group, will now append to list structures and pickle..')
+
+i_list.extend(i)
+e_list.extend(e)
+t_list.extend(t)
+tols.extend(tol)
+iters.extend(it)
+fracs.extend(fr)
+subs.extend(su)
+rates.extend(ra)
+estimators.extend(estimat)
+maxdeps.extend(maxd)
+minsamps.extend(minsa)
+minsamps1.extend(minsa1)
+minweights.extend(minwei)
+maxfeats.extend(maxfe)
+maxleafs.extend(maxlea)
+minimp_decs.extend(minidecs)
+
+print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
+
+filename = 'gdr_pickle'
+outfile = open(filename,'wb')
+
+for obj in pickle_objs:
+  pickle.dump(obj,outfile)
+
+outfile.close()
+"""
+print('pickling complete! EOF!')

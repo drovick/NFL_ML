@@ -88,8 +88,7 @@ def linear_regression_error_frame(test_predictions,test_out,label_cols):
 num_round = 100
 
 param = {'objective': 'reg:squarederror', # Specify multiclass classification
-         'num_class': 8, # Number of possible output classes
-         'tree_method': 'gpu_hist' # Use GPU accelerated algorithm
+         'tree_method': 'auto' # Use GPU accelerated algorithm
          }
 
 dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output['Passing_Yds'])

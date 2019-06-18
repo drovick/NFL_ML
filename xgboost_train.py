@@ -7,6 +7,7 @@ import xgboost as xgb
 import numpy as np
 import time
 import pickle
+from sklearn import model_selection
 
 dataset = pd.read_csv("final_dataset.csv", low_memory=False, parse_dates=['Date'], infer_datetime_format=True)
 
@@ -15,10 +16,11 @@ dataset.drop(columns=['Unnamed: 0', 'C', 'CB', 'DB', 'DE', 'DL', 'DT', 'G', 'LB'
         'NT', 'OG', 'OL', 'OT', 'P', 'T'],  inplace=True)
 
 
-test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
-val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
-train_set = pd.DataFrame(dataset[dataset.Date<datetime.datetime(2017,1,1)])
-
+#test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
+#val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
+#train_set = pd.DataFrame(dataset[dataset.Date<datetime.datetime(2017,1,1))])
+full_set = pd.DataFrame(dataset)
+"""
 test_set.reset_index(inplace=True)
 test_set.drop(columns='index', inplace=True)
 test_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
@@ -26,6 +28,10 @@ test_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,
 val_set.reset_index(inplace=True)
 val_set.drop(columns='index', inplace=True)
 val_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
+"""
+full_set.reset_index(inplace=True)
+full_set.drop(columns='index', inplace=True)
+full_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
 
 
 train_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
@@ -37,7 +43,7 @@ input_cols.remove('Scoring_Sfty')
 input_cols.remove('Scoring_TD')
 input_cols = list(input_cols)
 
-
+"""
 test_set_input = test_set[input_cols]
 test_set_output = test_set[output_cols]
 
@@ -46,6 +52,21 @@ val_set_output = val_set[output_cols]
 
 train_set_input = train_set[input_cols]
 train_set_output = train_set[output_cols]
+"""
+
+full_set_input = full_set[input_cols]
+full_set_output = full_set[output_cols]
+
+X_train, X_test, y_train, y_test = train_test_split(full_set_input, full_set_output, test_size=0.2)
+X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2)
+
+
+"""
+def normalize_input(input_frame,cat_cols,means,std_devs):
+    normalized = ((input_frame.drop(columns=cat_cols)-means.drop(labels=cat_cols))/std_devs.drop(labels=cat_cols)).copy()
+    cat = input_frame[cat_cols].copy()
+    return pd.concat([cat,normalized],axis=1,sort=False)
+"""
 
 def normalize_input(input_frame,cat_cols,means,std_devs):
     normalized = ((input_frame.drop(columns=cat_cols)-means.drop(labels=cat_cols))/std_devs.drop(labels=cat_cols)).copy()
@@ -56,9 +77,21 @@ input_means = train_set_input.mean()
 input_std_deviations = train_set_input.std()
 categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
 
+"""
 test_set_input_normalized = normalize_input(test_set_input,categorical_ish,input_means,input_std_deviations)
 val_set_input_normalized = normalize_input(val_set_input,categorical_ish,input_means,input_std_deviations)
 train_set_input_normalized = normalize_input(train_set_input,categorical_ish,input_means,input_std_deviations)
+"""
+
+test_set_input_normalized = normalize_input(pd.DataFrame(X_test, columns=input_cols),categorical_ish,input_means,input_std_deviations)
+val_set_input_normalized = normalize_input(pd.DataFrame(X_val,columns=input_cols),categorical_ish,input_means,input_std_deviations)
+train_set_input_normalized = normalize_input(pd.DataFrame(X_train,columns=input_cols),categorical_ish,input_means,input_std_deviations)
+
+test_set_output = pd.DataFrame(y_test, columns=output_cols)
+val_set_output = pd.DataFrame(y_val, columns=output_cols)
+train_set_output = pd.DataFrame(y_train, columns=output_cols)
+
+###DATA PREPARING ENDS
 
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import explained_variance_score
@@ -142,7 +175,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
         for iters in n_iter_no_change:
             for sub in subsample:
                 for rate in learning_rate:
-                    for n_estimators in n_estimators:
+                    for n in n_estimators:
                         for depth in max_depths:
                             for minsamp_leaf in min_samples_leafs:
                                 for maxfeat in max_featuress:
@@ -152,7 +185,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                         iters_list.append(iters)
                                         sub_list.append(sub)
                                         rate_list.append(rate)   
-                                        n_estimators_list.append(n_estimators)
+                                        n_estimators_list.append(n)
                                         maxdep_list.append(depth)
                                         minsamp_leaf_list.append(minsamp_leaf)
                                         maxfeat_list.append(maxfeat)
@@ -186,7 +219,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 
 print('about to start training the first group..')
 tmp = time.time()
-i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[+10],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[50,100],max_depths=[20],min_samples_leafs=[5],max_featuress=[0.2,0.5],min_impurity_decreases=[float(+0.005)])
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[+80],subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[100,400],max_depths=[30,90],min_samples_leafs=[1],max_featuress=[0.05,0.1,0.2],min_impurity_decreases=[float(+0.01),float(+0.001),float(+00005)])
 print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 
 
@@ -204,7 +237,7 @@ print('pickling complete, will now train the second group of models')
 
 tmp = time.time()
 print('about to start training the second group..')
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+10)],subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[80],max_depths=[50],min_samples_leafs=[5],max_featuress=[0.5,0.8],min_impurity_decreases=[float(+0.005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+80)],subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[100,400],max_depths=[30,90],min_samples_leafs=[1],max_featuress=[0.4,0.6],min_impurity_decreases=[float(+0.01),float(+0.001),float(+00005)])
 print('trained the second group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 print('will now append to lists..')     
 
@@ -233,7 +266,7 @@ outfile.close()
 
 print('pickling complete, training the final group..')
 
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+10)],subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[80],max_depths=[50,100],min_samples_leafs=[5],max_featuress=[1.0],min_impurity_decreases=[float(+0.005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change=[int(+80)],subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[100,300],max_depths=[50,60,70,80,90,100],min_samples_leafs=[1],max_featuress=[0.7,0.8,0.9,1.0],min_impurity_decreases=[float(+0.01),float(+0.005),float(+0.001)])
 print('trained the final group, will now append to list structures and pickle..')
 
 i_list.extend(i)

@@ -92,8 +92,8 @@ param = {'objective': 'multi:softmax', # Specify multiclass classification
          'tree_method': 'gpu_hist' # Use GPU accelerated algorithm
          }
 
-dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output[3])
-dtest = xgb.DMatrix(test_set_input_normalized, test_set_output[3])
+dtrain = xgb.DMatrix(train_set_input_normalized, train_set_output['Passing_Yds'])
+dtest = xgb.DMatrix(test_set_input_normalized, test_set_output['Passing_Yds'])
 
 
 gpu_res = {}

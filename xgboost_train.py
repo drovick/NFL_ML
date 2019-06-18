@@ -87,7 +87,7 @@ def linear_regression_error_frame(test_predictions,test_out,label_cols):
 
 num_round = 100
 
-param = {'objective': 'reg:squarederror', # Specify multiclass classification
+param = { # Specify multiclass classification
          'tree_method': 'auto' # Use GPU accelerated algorithm
          }
 

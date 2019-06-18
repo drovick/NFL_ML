@@ -6,6 +6,7 @@ import numpy as np
 import xgboost as xgb
 import numpy as np
 import time
+import pickle
 
 dataset = pd.read_csv("final_dataset.csv", low_memory=False, parse_dates=['Date'], infer_datetime_format=True)
 
@@ -111,7 +112,7 @@ def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_col
     
     tree_model = xgb.XGBRegressor(early_stopping_rounds=n_iter_no_change_,max_depth=max_depth_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_,**params)
      
-    tree_model.fit(train_in,train_out)
+    tree_model.fit(train_in.values,train_out.values)
     
     test_predictions = tree_model.predict(test_in)
     imps = tree_model.feature_importances_ 

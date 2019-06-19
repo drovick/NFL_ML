@@ -6,7 +6,7 @@ def multitree_get_errors(index,importance_list,error_list,tree_list,n_estimators
     print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]))
     return error_list[index]
 
-filename = 'xgb_pickle_1'
+filename = 'xgbpickle_1'
 infile = open(filename,'rb')
 
 i_list = pickle.load(infile)

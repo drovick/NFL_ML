@@ -183,7 +183,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
     i=0
   
     for mod in models:
-        for iters in n_iter_no_change__:
+        for iters_ in n_iter_no_change__:
             for sub in subsample:
                 for rate in learning_rate:
                     for n in n_estimators:
@@ -193,7 +193,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                     for minimp_dec in min_impurity_decreases:
                                         
                                         tree_list.append(str(mod))                                                            
-                                        iters_list.append(iters)
+                                        iters_list.append(iters_)
                                         sub_list.append(sub)
                                         rate_list.append(rate)   
                                         n_estimators_list.append(n)

@@ -14,6 +14,7 @@ def compare_errors(e_lst):
     best_error = 500
   
     for i in range(0,len(e_lst)):
+        print(e_lst[i])
         passing_err = e_lst[i].loc['Passing_Yds','RMSError']
         rushing_err = e_lst[i].loc['Rushing_Yds','RMSError']
         receiving_err = e_lst[i].loc['Receiving_Yds','RMSError']

@@ -7,7 +7,7 @@ import xgboost as xgb
 import numpy as np
 import time
 import pickle
-from sklearn.model_selection import train_test_split
+import sklearn
 
 dataset = pd.read_csv("final_dataset.csv", low_memory=False, parse_dates=['Date'], infer_datetime_format=True)
 

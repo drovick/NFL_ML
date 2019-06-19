@@ -8,7 +8,7 @@ def multitree_get_errors(index,importance_list,error_list,tree_list,tolss,iterss
     print('n_iterations:', str(iterss[index]),', validation_fraction:',str(fracss[index]),', subsample:',str(subss[index]),', learning rate:',str(ratess[index]))
     return error_list[index]
 
-filename = 'gdr_pickle_1'
+filename = 'gdr_pickle'
 infile = open(filename,'rb')
 
 i_list = pickle.load(infile)

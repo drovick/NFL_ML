@@ -167,7 +167,7 @@ print('will pickle and save it to a file before proceeding..')
 print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 import pickle
-filename = 'xgbpickle_1'
+filename = 'old_xgbpickle_1'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 for obj in pickle_objs:
@@ -191,7 +191,7 @@ minsamps.extend(minsa)
 maxfeats.extend(maxfe)
 minimp_decs.extend(minidecs)
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
-filename = 'xgbpickle_2'
+filename = 'old_xgbpickle_2'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 for obj in pickle_objs:
@@ -212,7 +212,7 @@ minsamps.extend(minsa)
 maxfeats.extend(maxfe)
 minimp_decs.extend(minidecs)
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
-filename = 'gdr_pickle'
+filename = 'old_xgb_pickle'
 outfile = open(filename,'wb')
 for obj in pickle_objs:
   pickle.dump(obj,outfile)

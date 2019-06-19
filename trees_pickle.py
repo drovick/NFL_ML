@@ -50,13 +50,16 @@ print('results obtained for ', str(len(e_list)),' models, now printing..')
 output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passing_Yds','Punt Returns_TD','Receiving_Rec','Receiving_TD','Receiving_Yds','Rushing_TD','Rushing_Yds','Scoring_2PM','Scoring_FGM','Scoring_XPM','Scoring_FG_miss','Scoring_XP_miss','WLT','Team_Pts_for','Team_Pts_against','Team_Pts_diff']
 
 for i in range(0,len(e_list)):
-    e_list[i].index = output_cols
+    e_list[i].index=output_cols
     print(multitree_get_errors(i,i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))
     
 best_m_index, best_e = compare_errors(e_list)
 
 print('best performing model (rmse) across Passing_Yds, Rushing_Yds and Rec_Yds:str(best_m_index),')
-print('printing error frame:..')
-print(best_e)
+print('sum of their RMSEs:',best_e)
 
+print('printing error frame:..')
+print(multitree_get_errors(best_m_index,i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))
+
+print(' ')
 print('..EOF')

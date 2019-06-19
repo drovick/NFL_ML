@@ -23,7 +23,7 @@ def multitree_get_errors(index,importance_list,error_list,tree_list,n_estimators
     print('max_features:,', str(maxfeat_list[index]),' max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]))
     return error_list[index]
 
-filename = sys.argv[0]
+filename = str(sys.argv[0])
 print('opening ',filename,' pickle file..')
 infile = open(filename,'rb')
 print('unpacking objects..')

@@ -22,9 +22,9 @@ def compare_errors(e_lst):
         receiving_err = e_lst[i].loc['Receiving_Yds','RMSError']
         error_sum = passing_err + rushing_err + receiving_err
     
-    if error_sum < best_error:
-        best_error = error_sum
-        best_model_index = i
+        if error_sum < best_error:
+            best_error = error_sum
+            best_model_index = i
   
     return best_model_index, best_error
 

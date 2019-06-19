@@ -15,14 +15,15 @@ dataset.drop(columns='Previous_D_Punting_Blck',inplace=True)
 dataset.drop(columns=['Unnamed: 0', 'C', 'CB', 'DB', 'DE', 'DL', 'DT', 'G', 'LB', 'LS', 'LT',
         'NT', 'OG', 'OL', 'OT', 'P', 'T'],  inplace=True)
 
-
+"""
 test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
 val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
 train_set = pd.DataFrame(dataset[(dataset.Date<datetime.datetime(2017,1,1))])
-#full_set = pd.DataFrame(dataset)
+"""
+full_set = pd.DataFrame(dataset)
 
 
-
+"""
 test_set.reset_index(inplace=True)
 test_set.drop(columns='index', inplace=True)
 test_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
@@ -35,19 +36,19 @@ full_set.reset_index(inplace=True)
 full_set.drop(columns='index', inplace=True)
 full_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
 
-"""
-train_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
+
+#train_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
 
 
 output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passing_Yds','Punt Returns_TD','Receiving_Rec','Receiving_TD','Receiving_Yds','Rushing_TD','Rushing_Yds','Scoring_2PM','Scoring_FGM','Scoring_XPM','Scoring_FG_miss','Scoring_XP_miss','WLT','Team_Pts_for','Team_Pts_against','Team_Pts_diff']
-input_cols = set(train_set.columns.values) - set(output_cols)
-#input_cols = set(full_set.columns) - set(output_cols)
+#input_cols = set(train_set.columns.values) - set(output_cols)
+input_cols = set(full_set.columns) - set(output_cols)
 input_cols.remove('Scoring_Pts')
 input_cols.remove('Scoring_Sfty')
 input_cols.remove('Scoring_TD')
 input_cols = list(input_cols)
 
-
+"""
 test_set_input = test_set[input_cols]
 test_set_output = test_set[output_cols]
 
@@ -100,7 +101,7 @@ train_set_input_normalized = normalize_input(pd.DataFrame(X_train,columns=input_
 test_set_output = pd.DataFrame(y_test, columns=output_cols)
 val_set_output = pd.DataFrame(y_val, columns=output_cols)
 train_set_output = pd.DataFrame(y_train, columns=output_cols)
-"""
+
 
 ###DATA PREPARING ENDS
 
@@ -231,7 +232,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 
 print('about to start training the first group..')
 tmp = time.time()
-i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=80,subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[100,400],max_depths=[30,90],min_samples_leafs=[1],max_featuress=[0.05,0.1,0.2],min_impurity_decreases=[float(+0.01),float(+0.001),float(+0.0005)])
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=80,subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[200],max_depths=[30,90],min_samples_leafs=[1],max_featuress=[0.05,0.1,0.2],min_impurity_decreases=[float(+0.01),float(+0.001),float(+0.0005)])
 print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 
 
@@ -249,7 +250,7 @@ print('pickling complete, will now train the second group of models')
 
 tmp = time.time()
 print('about to start training the second group..')
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=80,subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[100,400],max_depths=[30,90],min_samples_leafs=[1],max_featuress=[0.4,0.6],min_impurity_decreases=[float(+0.01),float(+0.001),float(+0.0005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=80,subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[200],max_depths=[30,90],min_samples_leafs=[1],max_featuress=[0.4,0.6],min_impurity_decreases=[float(+0.01),float(+0.001),float(+0.0005)])
 print('trained the second group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 print('will now append to lists..')     
 
@@ -278,7 +279,7 @@ outfile.close()
 
 print('pickling complete, training the final group..')
 
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=80,subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[100,300],max_depths=[50,60,70,80,90,100],min_samples_leafs=[1],max_featuress=[0.7,0.8,0.9,1.0],min_impurity_decreases=[float(+0.005),float(+0.001),float(+0.0005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=80,subsample=[float(+0.1),float(+0.01)],learning_rate=[float(+0.01),float(0.001)],n_estimators=[200],max_depths=[50,60,70,85,100],min_samples_leafs=[1],max_featuress=[0.7,0.8,0.9,100],min_impurity_decreases=[float(+0.005),float(+0.001),float(+0.0005)])
 print('trained the final group, will now append to list structures and pickle..')
 
 i_list.extend(i)

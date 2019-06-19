@@ -145,20 +145,22 @@ def linear_regression_error_frame(test_predictions,test_out,label_cols):
 
 def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_cols_,output_cols_,n_iter_no_change_=None,subsample_=0.1,learning_rate_=0.1,n_estimators_=50,max_depth_=20,min_samples_leaf_=1,max_features_=1.0,min_impurity_decrease_=0):
     
+    X_train_, X_val_, y_train_, y_val_ = sklearn.model_selection.train_test_split(train_in, train_out, test_size=0.2)
+    
     # Convert test data from numpy to XGBoost format
-    xgbtest = xgb.DMatrix(test_in, label=test_out)
+    xgbval = xgb.DMatrix(X_val_, label=y_val_)
     
     params = { 'booster' : 'gbtree',
         'tree_method' : 'gpu_hist', # Use GPU accelerated algorithm
         'predictor' : 'gpu_predictor',
         'objective' : 'reg:squarederror',
-        'evals' : [(xgbtest, 'test')],
+        'evals' : [(xgbval, 'val')],
         'n_gpus': 1, 'gpu_id' : 3
         }
     
     tree_model = xgb.XGBRegressor(early_stopping_rounds=n_iter_no_change_,max_depth=max_depth_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_,**params)
      
-    tree_model.fit(train_in,train_out)
+    tree_model.fit(X_train_,y_train_)
     
     test_predictions = tree_model.predict(test_in)
     imps = tree_model.feature_importances_ 

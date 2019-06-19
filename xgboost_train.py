@@ -183,46 +183,47 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
     i=0
   
     for mod in models:
-        for iters_ in n_iter_no_change__:
-            for sub in subsample:
-                for rate in learning_rate:
-                    for n in n_estimators:
-                        for depth in max_depths:
-                            for minsamp_leaf in min_samples_leafs:
-                                for maxfeat in max_featuress:
-                                    for minimp_dec in min_impurity_decreases:
+        #for iters_ in n_iter_no_change__:
+        for sub in subsample:
+            for rate in learning_rate:
+                for n in n_estimators:
+                    for depth in max_depths:
+                        for minsamp_leaf in min_samples_leafs:
+                            for maxfeat in max_featuress:
+                                for minimp_dec in min_impurity_decreases:
                                         
-                                        tree_list.append(str(mod))                                                            
-                                        iters_list.append(iters_)
-                                        sub_list.append(sub)
-                                        rate_list.append(rate)   
-                                        n_estimators_list.append(n)
-                                        maxdep_list.append(depth)
-                                        minsamp_leaf_list.append(minsamp_leaf)
-                                        maxfeat_list.append(maxfeat)
-                                        minimp_dec_list.append(minimp_dec)
+                                    tree_list.append(str(mod))                                                            
+                                    #iters_list.append(iters_)
+                                    iters_list.append(n_iter_no_change__)
+                                    sub_list.append(sub)
+                                    rate_list.append(rate)   
+                                    n_estimators_list.append(n)
+                                    maxdep_list.append(depth)
+                                    minsamp_leaf_list.append(minsamp_leaf)
+                                    maxfeat_list.append(maxfeat)
+                                    minimp_dec_list.append(minimp_dec)
                                         
-                                        error_frame = pd.DataFrame()
-                                        importances_frame = pd.DataFrame()
+                                    error_frame = pd.DataFrame()
+                                    importances_frame = pd.DataFrame()
                                                             
-                                        print('entering multitree_fit_errors')
-                                        #c = 0
-                                        for col in output_cols_:
-                                            #c+=1
-                                            importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,n_iter_no_change_=iters_,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_leaf_=minsamp_leaf,max_features_=maxfeat,min_impurity_decrease_=minimp_dec)               
-                                            #if c == 10:
-                                                #print('model trained for 10 output features, 10 more to go..')
-                                            error_frame = pd.concat([error_frame,error],axis=0)
-                                            importances.index = input_cols_            
-                                            importances_frame = pd.concat([importances_frame,importances],axis=1,ignore_index=False)                                                            
+                                    print('entering multitree_fit_errors')
+                                    #c = 0
+                                    for col in output_cols_:
+                                        #c+=1
+                                        importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,n_iter_no_change_=iters_,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_leaf_=minsamp_leaf,max_features_=maxfeat,min_impurity_decrease_=minimp_dec)               
+                                        #if c == 10:
+                                            #print('model trained for 10 output features, 10 more to go..')
+                                        error_frame = pd.concat([error_frame,error],axis=0)
+                                        importances.index = input_cols_            
+                                        importances_frame = pd.concat([importances_frame,importances],axis=1,ignore_index=False)                                                            
                                                                                                                                                                                    
-                                        importances_list.append(importances_frame)                                               
-                                        error_list.append(error_frame)            
+                                    importances_list.append(importances_frame)                                               
+                                    error_list.append(error_frame)            
                                                             
 
                                         
-                                        print('tree trained! index:', str(i))
-                                        i +=1
+                                    print('tree trained! index:', str(i))
+                                    i +=1
 
     return importances_list,error_list,tree_list,iters_list,sub_list,rate_list,n_estimators_list,maxdep_list,minsamp_leaf_list,maxfeat_list,minimp_dec_list
 

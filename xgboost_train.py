@@ -38,7 +38,7 @@ full_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,
 """
 train_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
 
-"""
+
 output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passing_Yds','Punt Returns_TD','Receiving_Rec','Receiving_TD','Receiving_Yds','Rushing_TD','Rushing_Yds','Scoring_2PM','Scoring_FGM','Scoring_XPM','Scoring_FG_miss','Scoring_XP_miss','WLT','Team_Pts_for','Team_Pts_against','Team_Pts_diff']
 #input_cols = set(train_set.columns.values) - set(output_cols)
 input_cols = set(full_set.columns) - set(output_cols)
@@ -47,7 +47,7 @@ input_cols.remove('Scoring_Sfty')
 input_cols.remove('Scoring_TD')
 input_cols = list(input_cols)
 
-"""
+
 test_set_input = test_set[input_cols]
 test_set_output = test_set[output_cols]
 

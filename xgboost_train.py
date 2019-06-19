@@ -298,7 +298,7 @@ minimp_decs.extend(minidecs)
 
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
-filename = 'gdr_pickle'
+filename = 'xgb_pickle'
 outfile = open(filename,'wb')
 
 for obj in pickle_objs:

@@ -58,8 +58,8 @@ best_m_index, best_e = compare_errors(e_list)
 
 print('best performing model (rmse) across Passing_Yds, Rushing_Yds and Rec_Yds:str(best_m_index),')
 print('sum of their RMSEs:',best_e)
-
-print('printing error frame:..')
+print(' ')
+print('printing best error frame..')
 print(multitree_get_errors(best_m_index,i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))
 
 print(' ')

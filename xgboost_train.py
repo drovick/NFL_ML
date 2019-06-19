@@ -7,7 +7,7 @@ import xgboost as xgb
 import numpy as np
 import time
 import pickle
-import sklearn
+#import sklearn
 
 dataset = pd.read_csv("final_dataset.csv", low_memory=False, parse_dates=['Date'], infer_datetime_format=True)
 
@@ -16,11 +16,13 @@ dataset.drop(columns=['Unnamed: 0', 'C', 'CB', 'DB', 'DE', 'DL', 'DT', 'G', 'LB'
         'NT', 'OG', 'OL', 'OT', 'P', 'T'],  inplace=True)
 
 
-#test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
-#val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
-#train_set = pd.DataFrame(dataset[dataset.Date<datetime.datetime(2017,1,1))])
-full_set = pd.DataFrame(dataset)
-"""
+test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
+val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
+train_set = pd.DataFrame(dataset[dataset.Date<datetime.datetime(2017,1,1))])
+#full_set = pd.DataFrame(dataset)
+
+
+
 test_set.reset_index(inplace=True)
 test_set.drop(columns='index', inplace=True)
 test_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
@@ -35,8 +37,8 @@ full_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,
 
 """
 train_set.set_index(keys=['Name','Date','Tm'],drop=True,append=True,inplace=True,verify_integrity=False)
-"""
 
+"""
 output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passing_Yds','Punt Returns_TD','Receiving_Rec','Receiving_TD','Receiving_Yds','Rushing_TD','Rushing_Yds','Scoring_2PM','Scoring_FGM','Scoring_XPM','Scoring_FG_miss','Scoring_XP_miss','WLT','Team_Pts_for','Team_Pts_against','Team_Pts_diff']
 #input_cols = set(train_set.columns.values) - set(output_cols)
 input_cols = set(full_set.columns) - set(output_cols)
@@ -76,22 +78,21 @@ def normalize_input(input_frame,cat_cols,means,std_devs):
     return pd.concat([cat,normalized],axis=1,sort=False)
 
 """
+
 input_means = train_set_input.mean()
 input_std_deviations = train_set_input.std()
 categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
-"""
 
+"""
 input_means = pd.DataFrame(X_test, columns=input_cols).mean()
 input_std_deviations = pd.DataFrame(X_val,columns=input_cols).std()
 categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
-
-
 """
 test_set_input_normalized = normalize_input(test_set_input,categorical_ish,input_means,input_std_deviations)
 val_set_input_normalized = normalize_input(val_set_input,categorical_ish,input_means,input_std_deviations)
 train_set_input_normalized = normalize_input(train_set_input,categorical_ish,input_means,input_std_deviations)
-"""
 
+"""
 test_set_input_normalized = normalize_input(pd.DataFrame(X_test, columns=input_cols),categorical_ish,input_means,input_std_deviations)
 val_set_input_normalized = normalize_input(pd.DataFrame(X_val,columns=input_cols),categorical_ish,input_means,input_std_deviations)
 train_set_input_normalized = normalize_input(pd.DataFrame(X_train,columns=input_cols),categorical_ish,input_means,input_std_deviations)
@@ -99,6 +100,7 @@ train_set_input_normalized = normalize_input(pd.DataFrame(X_train,columns=input_
 test_set_output = pd.DataFrame(y_test, columns=output_cols)
 val_set_output = pd.DataFrame(y_val, columns=output_cols)
 train_set_output = pd.DataFrame(y_train, columns=output_cols)
+"""
 
 ###DATA PREPARING ENDS
 

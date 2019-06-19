@@ -283,7 +283,7 @@ outfile.close()
 
 print('pickling complete, training the final group..')
 
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+50,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.005),float(0.001),float(0.00005),float(0.00001)],n_estimators=[100],max_depths=[30,45,60],min_samples_leafs=[2],max_featuress=[0.4,0.3,0.2],min_impurity_decreases=[float(+0.005),float(0.001),float(0.0005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+50,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.005),float(0.001),float(0.00005),float(0.00001)],n_estimators=[100],max_depths=[40,45,60],min_samples_leafs=[2],max_featuress=[0.25,0.2,0.1],min_impurity_decreases=[float(+0.005),float(0.001),float(0.0005)])
 print('trained the final group, will now append to list structures and pickle..')
 
 i_list.extend(i)

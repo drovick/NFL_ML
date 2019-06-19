@@ -58,7 +58,7 @@ output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passi
 
 
 for i in range(0,len(e_list)):
-    e_list.index = output_cols
+    e_list[i].index = output_cols
     print(multitree_get_errors(i,i_list,e_list,t_list,tols,iters,fracs,subs,rates,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))
     
 

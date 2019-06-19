@@ -28,7 +28,7 @@ def compare_errors(e_lst):
 filename = str(sys.argv[1])
 print('opening ',filename,' pickle file..')
 infile = open(filename,'rb')
-print('unpacking objects..'
+print('unpacking objects..')
 
 i_list = pickle.load(infile)
 e_list = pickle.load(infile)

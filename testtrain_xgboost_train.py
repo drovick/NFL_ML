@@ -240,7 +240,7 @@ print('trained the first group, GPU Training Time: %s seconds'% (str(time.time()
 print('will pickle and save it to a file before proceeding..')  
 print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 import pickle
-filename = 'xgbpickle_1'
+filename = 'testtrain_xgbpickle_1'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 for obj in pickle_objs:
@@ -270,7 +270,7 @@ minimp_decs.extend(minidecs)
 
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
-filename = 'xgbpickle_2'
+filename = 'testtrain_xgbpickle_2'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 
@@ -298,7 +298,7 @@ minimp_decs.extend(minidecs)
 
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
-filename = 'xgb_pickle'
+filename = 'testtrain_xgb_pickle'
 outfile = open(filename,'wb')
 
 for obj in pickle_objs:

@@ -59,8 +59,8 @@ train_set_output = train_set[output_cols]
 full_set_input = full_set[input_cols]
 full_set_output = full_set[output_cols]
 
-X_train, X_test, y_train, y_test = linear_model.train_test_split(full_set_input, full_set_output, test_size=0.2)
-X_train, X_val, y_train, y_val = linear_model.train_test_split(X_train, y_train, test_size=0.2)
+X_train, X_test, y_train, y_test = model_selection.train_test_split(full_set_input, full_set_output, test_size=0.2)
+X_train, X_val, y_train, y_val = model_selection.train_test_split(X_train, y_train, test_size=0.2)
 
 
 """

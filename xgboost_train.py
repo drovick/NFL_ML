@@ -233,7 +233,10 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 
 print('about to start training the first group..')
 tmp = time.time()
-i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(+0.01),float(+0.005)],learning_rate=[float(0.01),float(0.005)],n_estimators=[10],max_depths=[60],min_samples_leafs=[2],max_featuress=[0.4,0.3,0.2],min_impurity_decreases=[float(+0.01)])
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.0005),float(0.00001)],n_estimators=[80],max_depths=[110],min_samples_leafs=[2],max_featuress=[0.8,0.6,0.4,0.3,0.2],min_impurity_decreases=[float(+0.005)])
+#i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.0005),float(0.00001)],n_estimators=[80],max_depths=[70],min_samples_leafs=[2],max_featuress=[0.5,0.4,0.3,0.2],min_impurity_decreases=[float(+0.005)])
+#i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.0005),float(0.00001)],n_estimators=[80],max_depths=[50],min_samples_leafs=[2],max_featuress=[0.3,0.2],min_impurity_decreases=[float(+0.005)])
+
 #i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+5,subsample=[float(+1.0)],learning_rate=[float(+0.1)],n_estimators=[50],max_depths=[20],min_samples_leafs=[2],max_featuress=[0.2],min_impurity_decreases=[float(+0.01),float(+0.001)])
 print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 
@@ -241,7 +244,7 @@ print('trained the first group, GPU Training Time: %s seconds'% (str(time.time()
 print('will pickle and save it to a file before proceeding..')  
 print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 import pickle
-filename = 'xgbpickle_1'
+filename = 'smallbatch_xgbpickle_1'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 for obj in pickle_objs:
@@ -271,7 +274,7 @@ minimp_decs.extend(minidecs)
 
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
-filename = 'xgbpickle_2'
+filename = 'smallbatch_xgbpickle_2'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 
@@ -299,7 +302,7 @@ minimp_decs.extend(minidecs)
 
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
-filename = 'xgb_pickle'
+filename = 'smallbatch_xgb_pickle'
 outfile = open(filename,'wb')
 
 for obj in pickle_objs:

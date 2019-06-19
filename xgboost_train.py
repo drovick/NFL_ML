@@ -18,7 +18,7 @@ dataset.drop(columns=['Unnamed: 0', 'C', 'CB', 'DB', 'DE', 'DL', 'DT', 'G', 'LB'
 
 test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
 val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
-train_set = pd.DataFrame(dataset[dataset.Date<datetime.datetime(2017,1,1))])
+train_set = pd.DataFrame(dataset[(dataset.Date<datetime.datetime(2017,1,1))])
 #full_set = pd.DataFrame(dataset)
 
 

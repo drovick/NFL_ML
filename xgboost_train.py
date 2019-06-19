@@ -209,7 +209,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                         #c = 0
                                         for col in output_cols_:
                                             #c+=1
-                                            importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,n_iter_no_change_=iters,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_leaf_=minsamp_leaf,max_features_=maxfeat,min_impurity_decrease_=minimp_dec)               
+                                            importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,n_iter_no_change_=iters_,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_leaf_=minsamp_leaf,max_features_=maxfeat,min_impurity_decrease_=minimp_dec)               
                                             #if c == 10:
                                                 #print('model trained for 10 output features, 10 more to go..')
                                             error_frame = pd.concat([error_frame,error],axis=0)

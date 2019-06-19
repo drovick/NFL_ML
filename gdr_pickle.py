@@ -7,6 +7,7 @@ def multitree_get_errors(index,importance_list,error_list,tree_list,tolss,iterss
     print('min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]), ', max_features:,', str(maxfeat_list[index]))
     print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:',str(minimp_dec_list[index]),' tolerance:', str(tolss[index]))
     print('n_iterations:', str(iterss[index]),', validation_fraction:',str(fracss[index]),', subsample:',str(subss[index]),', learning rate:',str(ratess[index]))
+    print(' ')
     return error_list[index]
 
 def compare_errors(e_lst):

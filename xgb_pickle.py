@@ -5,6 +5,7 @@ def multitree_get_errors(index,importance_list,error_list,tree_list,n_estimators
     print('model index:',str(index),', Model:',str(tree_list[index]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]))
     print('min_samples_split:', str(minsamp_split_list[index]),', min_samples_leaf:', str(minsamp_leaf_list[index]), 'min_weight_fraction_leaf:', str(minweight_frac_leaf_list[index]))
     print('max_features:',str(maxfeat_list[index]),', max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]))
+    print(' ')
     return error_list[index]
 
 def compare_errors(e_lst):
@@ -62,7 +63,7 @@ best_m_index, best_e = compare_errors(e_list)
 print('#########################################################################################')
 print('#########################################################################################')
 print(' ')
-print('best performing model (rmse) across Passing_Yds, Rushing_Yds and Rec_Yds:', str(best_m_index))
+print('best performing model (rmse) across Passing_Yds, Rushing_Yds and Rec_Yds: ',str(best_m_index))
 print('sum of their RMSEs:',best_e)
 print(' ')
 print('printing best error frame..')

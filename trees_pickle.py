@@ -23,7 +23,7 @@ def multitree_get_errors(index,importance_list,error_list,tree_list,n_estimators
     print('max_features:,', str(maxfeat_list[index]),' max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]))
     return error_list[index]
 
-filename = str(sys.argv[0])
+filename = str(sys.argv[1])
 print('opening ',filename,' pickle file..')
 infile = open(filename,'rb')
 print('unpacking objects..')
@@ -49,7 +49,7 @@ for i in range(0,len(e_list)):
     
 best_m_index, best_e = compare_errors(e_list)
 
-print('best performing model across Passing_Yds, Rushing_Yds and Rec_Yds:str(best_m_index),')
+print('best performing model (rmse) across Passing_Yds, Rushing_Yds and Rec_Yds:str(best_m_index),')
 print('printing error frame:..')
 print(best_e)
 

@@ -23,8 +23,10 @@ def compare_errors(e_lst):
   
     return best_model_index, best_error
 
-filename = 'xgbpickle_1'
+filename = str(sys.argv[1])
+print('opening ',filename,' pickle file..')
 infile = open(filename,'rb')
+print('unpacking objects..'
 
 i_list = pickle.load(infile)
 e_list = pickle.load(infile)
@@ -40,7 +42,19 @@ minsamps = pickle.load(infile)
 maxfeats = pickle.load(infile)
 minimp_decs = pickle.load(infile)
 
+
 infile.close()
+print('objects unpacked!')
+print('results obtained for ', str(len(e_list)),' models, now printing..')
+
 
 for i in range(0,len(e_list)):
     print(multitree_get_errors(i,i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs))
+    
+    best_m_index, best_e = compare_errors(e_list)
+
+print('best performing model (rmse) across Passing_Yds, Rushing_Yds and Rec_Yds:str(best_m_index),')
+print('printing error frame:..')
+print(best_e)
+
+print('..EOF')

@@ -25,7 +25,7 @@ def compare_errors(e_lst):
   
     return best_model_index, best_error
 
-filename = str(sys.argv[0])
+filename = str(sys.argv[1])
 print('opening ',filename,' pickle file..')
 
 infile = open(filename,'rb')
@@ -57,7 +57,7 @@ for i in range(0,len(e_list)):
 
 best_m_index, best_e = compare_errors(e_list)
 
-print('best performing model across Passing_Yds, Rushing_Yds and Rec_Yds:str(best_m_index),')
+print('best performing model (rmse) across Passing_Yds, Rushing_Yds and Rec_Yds:',str(best_m_index))
 print('printing error frame:..')
 print(best_e)
 

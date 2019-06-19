@@ -6,7 +6,23 @@ def multitree_get_errors(index,importance_list,error_list,tree_list,n_estimators
     print('max_leaf_nodes:', str(maxleaf_nodes_list[index]), ', min_impurity_decrease:', str(minimp_dec_list[index]))
     return error_list[index]
 
-filename = 'testtrain_xgbpickle_1'
+def compare_errors(e_lst):
+    best_model_index = 0
+    best_error = 500
+  
+    for i in range(0,e_lst):
+        passing_err = e_lst[i].loc['Passing_Yds','RMSError']
+        rushing_err = e_lst[i].loc['Rushing_Yds','RMSError']
+        receiving_err = e_lst[i].loc['Receiving_Yds','RMSError']
+        error_sum = passing_err + rushing_err + receiving_err
+    
+    if error_sum < best_error:
+        best_error = error_sum
+        best_model_index = i
+  
+    return best_model_index, best_error
+
+filename = sys.argv[0]
 infile = open(filename,'rb')
 
 i_list = pickle.load(infile)

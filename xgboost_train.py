@@ -186,7 +186,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
         #for iters_ in n_iter_no_change__:
         for sub in subsample:
             for rate in learning_rate:
-                for n in n_estimators:
+                for n_ in n_estimators:
                     for depth in max_depths:
                         for minsamp_leaf in min_samples_leafs:
                             for maxfeat in max_featuress:
@@ -197,7 +197,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                     iters_list.append(n_iter_no_change__)
                                     sub_list.append(sub)
                                     rate_list.append(rate)   
-                                    n_estimators_list.append(n)
+                                    n_estimators_list.append(n_)
                                     maxdep_list.append(depth)
                                     minsamp_leaf_list.append(minsamp_leaf)
                                     maxfeat_list.append(maxfeat)
@@ -210,7 +210,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                     #c = 0
                                     for col in output_cols_:
                                         #c+=1
-                                        importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,n_iter_no_change_=n_iter_no_change__,subsample_=sub,learning_rate_=rate,n_estimators_=n_estimators,max_depth_=depth,min_samples_leaf_=minsamp_leaf,max_features_=maxfeat,min_impurity_decrease_=minimp_dec)               
+                                        importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,n_iter_no_change_=n_iter_no_change__,subsample_=sub,learning_rate_=rate,n_estimators_=n_,max_depth_=depth,min_samples_leaf_=minsamp_leaf,max_features_=maxfeat,min_impurity_decrease_=minimp_dec)               
                                         #if c == 10:
                                             #print('model trained for 10 output features, 10 more to go..')
                                         error_frame = pd.concat([error_frame,error],axis=0)

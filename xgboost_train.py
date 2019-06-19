@@ -153,7 +153,7 @@ def gbr_multitree_fit_errors(model,train_in,train_out,test_in,test_out,input_col
         'predictor' : 'gpu_predictor',
         'objective' : 'reg:squarederror',
         'evals' : [(xgbtest, 'test')],
-        'n_gpus' : 1
+        'n_gpus' : -1
         }
     
     tree_model = xgb.XGBRegressor(early_stopping_rounds=n_iter_no_change_,max_depth=max_depth_,subsample=subsample_,learning_rate=learning_rate_,n_estimators=n_estimators_,min_child_weight=min_samples_leaf_,colsample_bytree=max_features_,gamma=min_impurity_decrease_,**params)

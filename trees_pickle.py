@@ -4,8 +4,11 @@ import sys
 def compare_errors(e_lst):
     best_model_index = 0
     best_error = 500
+    output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passing_Yds','Punt Returns_TD','Receiving_Rec','Receiving_TD','Receiving_Yds','Rushing_TD','Rushing_Yds','Scoring_2PM','Scoring_FGM','Scoring_XPM','Scoring_FG_miss','Scoring_XP_miss','WLT','Team_Pts_for','Team_Pts_against','Team_Pts_diff']
+
   
     for i in range(0,len(e_lst)):
+        e_lst[i].index = output_cols
         passing_err = e_lst[i].loc['Passing_Yds','RMSError']
         rushing_err = e_lst[i].loc['Rushing_Yds','RMSError']
         receiving_err = e_lst[i].loc['Receiving_Yds','RMSError']
@@ -44,7 +47,10 @@ infile.close()
 print('objects unpacked!')
 print('results obtained for ', str(len(e_list)),' models, now printing..')
 
+output_cols = ['Fumbles_Fmb','Kick Returns_TD','Passing_Int','Passing_TD','Passing_Yds','Punt Returns_TD','Receiving_Rec','Receiving_TD','Receiving_Yds','Rushing_TD','Rushing_Yds','Scoring_2PM','Scoring_FGM','Scoring_XPM','Scoring_FG_miss','Scoring_XP_miss','WLT','Team_Pts_for','Team_Pts_against','Team_Pts_diff']
+
 for i in range(0,len(e_list)):
+    e_list[i].index = output_cols
     print(multitree_get_errors(i,i_list,e_list,t_list,estimators,maxdeps,minsamps,minsamps1,minweights,maxfeats,maxleafs,minimp_decs))
     
 best_m_index, best_e = compare_errors(e_list)

@@ -282,7 +282,7 @@ outfile.close()
 
 print('pickling complete, training the final group..')
 
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(+0.1),float(+0.01),float(+0.005)],learning_rate=[float(0.01),float(0.001),float(0.005)],n_estimators=[80],max_depths=[0.3,0.5,0.7],min_samples_leafs=[2],max_featuress=[1.0],min_impurity_decreases=[float(+0.001),float(+0.005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(+0.1),float(+0.01),float(+0.005)],learning_rate=[float(0.01),float(0.001),float(0.005)],n_estimators=[80],max_depths=[30,50,75],min_samples_leafs=[2],max_featuress=[1.0],min_impurity_decreases=[float(+0.001),float(+0.005)])
 print('trained the final group, will now append to list structures and pickle..')
 
 i_list.extend(i)

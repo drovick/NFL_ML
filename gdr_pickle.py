@@ -13,7 +13,7 @@ def compare_errors(e_lst):
     best_model_index = 0
     best_error = 500
   
-    for i in range(0,e_lst):
+    for i in range(0,len(e_lst)):
         passing_err = e_lst[i].loc['Passing_Yds','RMSError']
         rushing_err = e_lst[i].loc['Rushing_Yds','RMSError']
         receiving_err = e_lst[i].loc['Receiving_Yds','RMSError']

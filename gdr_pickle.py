@@ -25,7 +25,7 @@ def compare_errors(e_lst):
   
     return best_model_index, best_error
 
-filename = sys.argv[0]
+filename = str(sys.argv[0])
 print('opening ',filename,' pickle file..')
 
 infile = open(filename,'rb')

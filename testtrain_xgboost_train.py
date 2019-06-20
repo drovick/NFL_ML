@@ -236,7 +236,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 print('about to start training the first group..')
 tmp = time.time()
 
-i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+15,subsample=[float(1.0),float(+0.1),float(+0.01)],learning_rate=[float(0.1),float(0.01),float(0.0005)],n_estimators=[50],max_depths=[110],min_samples_leafs=[2],max_featuress=[0.8,0.4],min_impurity_decreases=[float(0.005)])
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+15,subsample=[float(1.0),float(+0.1),float(+0.01)],learning_rate=[float(0.1),float(0.01),float(0.0005)],n_estimators=[80],max_depths=[110],min_samples_leafs=[2],max_featuress=[0.8,0.4],min_impurity_decreases=[float(0.005)])
 print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 
 

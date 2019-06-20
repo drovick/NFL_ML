@@ -1,7 +1,7 @@
 import pickle
 import sys
 
-def multitree_get_errors(index,importance_list,error_list,tree_list,iters_list,subs_list,rates_list,n_estimators_list,maxdep_list,minsamp_leaf_list,maxfeat_list,maxleaf_nodes_list,minimp_dec_list):
+def multitree_get_errors(index,importance_list,error_list,tree_list,iters_list,subs_list,rates_list,n_estimators_list,maxdep_list,minsamp_leaf_list,maxfeat_list,minimp_dec_list):
     print('model index:',str(index),', Model:',str(tree_list[index]),', n_estimators:', str(n_estimators_list[index]),', max_depth:', str(maxdep_list[index]))
     print('min_samples_leaf:', str(minsamp_leaf_list[index]),', early_stopping_iterations:',str(iter_list[index]),', subsample (batch size):',str(subs_list[index]))
     print('max_features:',str(maxfeat_list[index]),', min_impurity_decrease:', str(minimp_dec_list[index]),', learning_rate:',str(rates_list[index]))

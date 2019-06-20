@@ -9,7 +9,7 @@ import time
 import pickle
 import sklearn
 
-dataset = pd.read_csv("final_dataset.csv", low_memory=False, parse_dates=['Date'], infer_datetime_format=True)
+dataset = pd.read_csv("final_dataset.csv", engine='python', parse_dates=['Date'], infer_datetime_format=True)
 
 dataset.drop(columns='Previous_D_Punting_Blck',inplace=True)
 dataset.drop(columns=['Unnamed: 0', 'C', 'CB', 'DB', 'DE', 'DL', 'DT', 'G', 'LB', 'LS', 'LT',

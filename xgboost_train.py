@@ -214,11 +214,18 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
                                                             
                                     print('entering multitree_fit_errors')
                                     c = 0
+                                    tmp = time.time()
+                                    
                                     for col in output_cols_:
+                                        
                                         c+=1
                                         importances,error = gbr_multitree_fit_errors(mod,train_in,train_out[col],test_in,test_out[col],input_cols,col,n_iter_no_change_=n_iter_no_change__,subsample_=sub,learning_rate_=rate,n_estimators_=n_,max_depth_=depth,min_samples_leaf_=minsamp_leaf,max_features_=maxfeat,min_impurity_decrease_=minimp_dec)               
-                                        if c == 10:
+                                        
+                                        if c == 10:                            
                                             print('model trained for 10 output features, 10 more to go..')
+                                            print('GPU Training Time for last ten columns: %s seconds'% (str(time.time() - tmp)))
+                                            tmp = time.time()
+                                            
                                         error_frame = pd.concat([error_frame,error],axis=0)
                                         importances.index = input_cols_            
                                         importances_frame = pd.concat([importances_frame,importances],axis=1,ignore_index=False)                                                            

@@ -255,7 +255,7 @@ print('pickling complete, will now train the second group of models')
 tmp = time.time()
 print('about to start training the second group..')
 
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+100,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.005),float(0.001),float(0.00005),float(0.00001)],n_estimators=[100],max_depths=[80,70],min_samples_leafs=[2],max_featuress=[0.5,0.4,0.3],min_impurity_decreases=[float(0.001),float(0.0005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+100,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.005),float(0.001),float(0.00005),float(0.00001)],n_estimators=[80],max_depths=[80,70],min_samples_leafs=[2],max_featuress=[0.5,0.4,0.3],min_impurity_decreases=[float(0.001),float(0.0005)])
 print('trained the second group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 print('will now append to lists..')     
 

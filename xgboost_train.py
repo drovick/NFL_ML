@@ -20,6 +20,7 @@ test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
 val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
 train_set = pd.DataFrame(dataset[(dataset.Date<datetime.datetime(2017,1,1))])
 """
+
 full_set = pd.DataFrame(dataset)
 
 
@@ -236,7 +237,7 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 
 print('about to start training the first group..')
 tmp = time.time()
-i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+5,subsample=[float(1.0),float(+0.1),float(+0.01)],learning_rate=[float(0.1),float(0.01),float(0.0005)],n_estimators=[60],max_depths=[110],min_samples_leafs=[2],max_featuress=[0.8,0.6,0.4],min_impurity_decreases=[float(0.005)])
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+5,subsample=[float(1.0),float(0.8),float(+0.6)],learning_rate=[float(0.5),float(0.1),float(0.05)],n_estimators=[60],max_depths=[200],min_samples_leafs=[2],max_featuress=[1.0,0.7],min_impurity_decreases=[float(0.05),float(0.01)])
 
 print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 
@@ -244,7 +245,7 @@ print('trained the first group, GPU Training Time: %s seconds'% (str(time.time()
 print('will pickle and save it to a file before proceeding..')  
 print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 import pickle
-filename = '_normal_xgbpickle_1'
+filename = '_lessfit_normal_xgbpickle_1'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 for obj in pickle_objs:
@@ -257,7 +258,7 @@ tmp = time.time()
 print('about to start training the second group..')
 
 
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+5,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.001),float(0.00001)],n_estimators=[100],max_depths=[110],min_samples_leafs=[2],max_featuress=[0.5,0.4,0.3,0.2],min_impurity_decreases=[float(0.005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,val_set_input_normalized,val_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(0.1),float(0.05),float(+0.01)],learning_rate=[float(0.1),float(0.05),float(+0.01)],n_estimators=[100],max_depths=[200],min_samples_leafs=[2],max_featuress=[1.0,0.7],min_impurity_decreases=[float(0.05),float(0.01)])
 print('trained the second group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 print('will now append to lists..')     
 
@@ -272,7 +273,7 @@ maxdeps.extend(maxd)
 minsamps.extend(minsa)
 maxfeats.extend(maxfe)
 minimp_decs.extend(minidecs)
-
+"""
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
 filename = '_smallbatch_xgbpickle_2'
@@ -299,11 +300,12 @@ estimators.extend(estimat)
 maxdeps.extend(maxd)
 minsamps.extend(minsa)
 maxfeats.extend(maxfe)
-minimp_decs.extend(minidecs)
-
+minimp_decs  .extend(minidecs)
+"""
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
-filename = '_xgb_pickle'
+
+filename = '_lessfit_xgb_pickle'
 outfile = open(filename,'wb')
 
 for obj in pickle_objs:

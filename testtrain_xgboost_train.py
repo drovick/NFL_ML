@@ -20,6 +20,7 @@ test_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2018,1,1))])
 val_set = pd.DataFrame(dataset[(dataset.Date>=datetime.datetime(2017,1,1))&(dataset.Date<datetime.datetime(2018,1,1))])
 train_set = pd.DataFrame(dataset[(dataset.Date<datetime.datetime(2017,1,1))])
 """
+
 full_set = pd.DataFrame(dataset)
 
 
@@ -65,35 +66,27 @@ full_set_output = full_set[output_cols]
 X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(full_set_input, full_set_output, test_size=0.2)
 X_train, X_val, y_train, y_val = sklearn.model_selection.train_test_split(X_train, y_train, test_size=0.2)
 
-
-"""
-def normalize_input(input_frame,cat_cols,means,std_devs):
-    normalized = ((input_frame.drop(columns=cat_cols)-means.drop(labels=cat_cols))/std_devs.drop(labels=cat_cols)).copy()
-    cat = input_frame[cat_cols].copy()
-    return pd.concat([cat,normalized],axis=1,sort=False)
-"""
-
 def normalize_input(input_frame,cat_cols,means,std_devs):
     normalized = ((input_frame.drop(columns=cat_cols)-means.drop(labels=cat_cols))/std_devs.drop(labels=cat_cols)).copy()
     cat = input_frame[cat_cols].copy()
     return pd.concat([cat,normalized],axis=1,sort=False)
 
 """
-
 input_means = train_set_input.mean()
 input_std_deviations = train_set_input.std()
 categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
-
 """
+
 input_means = pd.DataFrame(X_test, columns=input_cols).mean()
 input_std_deviations = pd.DataFrame(X_val,columns=input_cols).std()
 categorical_ish = ['Home','Games_GS','Previous_Games_GS','Previous_WLT','Previous_Home','K','QB','TE','WR','RB','FB']
+
 """
 test_set_input_normalized = normalize_input(test_set_input,categorical_ish,input_means,input_std_deviations)
 val_set_input_normalized = normalize_input(val_set_input,categorical_ish,input_means,input_std_deviations)
 train_set_input_normalized = normalize_input(train_set_input,categorical_ish,input_means,input_std_deviations)
-
 """
+
 test_set_input_normalized = normalize_input(pd.DataFrame(X_test, columns=input_cols),categorical_ish,input_means,input_std_deviations)
 val_set_input_normalized = normalize_input(pd.DataFrame(X_val,columns=input_cols),categorical_ish,input_means,input_std_deviations)
 train_set_input_normalized = normalize_input(pd.DataFrame(X_train,columns=input_cols),categorical_ish,input_means,input_std_deviations)
@@ -236,14 +229,14 @@ def gbr_multitree_loop_lin_results(models,train_in,train_out,test_in,test_out,in
 print('about to start training the first group..')
 tmp = time.time()
 
-i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+15,subsample=[float(1.0),float(+0.1),float(+0.01)],learning_rate=[float(0.1),float(0.01),float(0.0005)],n_estimators=[60],max_depths=[110],min_samples_leafs=[2],max_featuress=[0.8,0.4],min_impurity_decreases=[float(0.005)])
+i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+5,subsample=[float(1.0),float(0.8),float(+0.6)],learning_rate=[float(0.5),float(0.1),float(0.05)],n_estimators=[60],max_depths=[200],min_samples_leafs=[2],max_featuress=[1.0,0.7],min_impurity_decreases=[float(0.05),float(0.01)])
 print('trained the first group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 
 
 print('will pickle and save it to a file before proceeding..')  
 print(str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 import pickle
-filename = '_normal_testtrain_xgbpickle_1'
+filename = '_lessfit_normal_testtrain_xgbpickle_1'
 outfile = open(filename,'wb')
 pickle_objs = [i_list,e_list,t_list,iters,subs,rates,estimators,maxdeps,minsamps,maxfeats,minimp_decs]
 for obj in pickle_objs:
@@ -255,7 +248,7 @@ print('pickling complete, will now train the second group of models')
 tmp = time.time()
 print('about to start training the second group..')
 
-i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+30,subsample=[float(+0.01),float(+0.005),float(+0.0001)],learning_rate=[float(0.001),float(0.001),float(0.00001)],n_estimators=[100],max_depths=[110],min_samples_leafs=[2],max_featuress=[0.8,0.6,0.4,0.2],min_impurity_decreases=[float(0.005)])
+i,e,t,it,su,ra,estimat,maxd,minsa,maxfe,minidecs = gbr_multitree_loop_lin_results(['XGBRegressor'],train_set_input_normalized,train_set_output,train_set_input_normalized,train_set_output,input_cols,output_cols,n_iter_no_change__=+10,subsample=[float(0.1),float(0.05),float(+0.01)],learning_rate=[float(0.1),float(0.05),float(+0.01)],n_estimators=[100],max_depths=[200],min_samples_leafs=[2],max_featuress=[1.0,0.7],min_impurity_decreases=[float(0.05),float(0.01))
 print('trained the second group, GPU Training Time: %s seconds'% (str(time.time() - tmp)))
 print('will now append to lists..')     
 
@@ -270,7 +263,7 @@ maxdeps.extend(maxd)
 minsamps.extend(minsa)
 maxfeats.extend(maxfe)
 minimp_decs.extend(minidecs)
-
+"""
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
 filename = '_smallbatch_testtrain_xgbpickle_2'
@@ -297,11 +290,11 @@ estimators.extend(estimat)
 maxdeps.extend(maxd)
 minsamps.extend(minsa)
 maxfeats.extend(maxfe)
-minimp_decs.extend(minidecs)
-
+minimp_decs  .extend(minidecs)
+"""
 print('append succesful, ',str(len(e_list)), ' models trained and evaluated, attempting to pickle..')
 
-filename = '_testtrain_xgb_pickle'
+filename = '_lessfit_testtrain_xgb_pickle'
 outfile = open(filename,'wb')
 
 for obj in pickle_objs:
